@@ -1588,16 +1588,12 @@ function obtenirRespostaPerDefecte(accio, parametres) {
                 `Dates actualitzades automàticament - Propera actualització en ${segonsRestants}s`;
         }
         
-// Carregar dates ocupades del Google Sheets (versió millorada)
+// Carregar dates ocupades del Google Sheets (VERSIÓ CORREGIDA)
 async function carregarDatesOcupades() {
     console.log('📅 Carregant dates ocupades per:', immobleSeleccionat);
-    document.getElementById('text-estat-calendari').textContent = 'Carregant dates ocupades...';
     
-    // Guardar l'estat actual del formulari abans de l'actualització
-    const formulariVisible = document.getElementById('resum-reserva').style.display !== 'none';
-    const dataIniciAnterior = dataIniciSeleccionada;
-    const dataFiAnterior = dataFiSeleccionada;
-    const datesValidesAnterior = datesValides;
+    // NO modificar l'estat del calendari durant la càrrega
+    // document.getElementById('text-estat-calendari').textContent = 'Carregant dates ocupades...';
     
     try {
         const resultat = await ferPeticioGS('obtenirDatesOcupades', {
@@ -1610,22 +1606,16 @@ async function carregarDatesOcupades() {
         let datesArray = [];
         
         if (Array.isArray(resultat)) {
-            // Cas 1: És un array directe (el que està passant)
             datesArray = resultat;
-            console.log('✅ Format: Array directe');
         } else if (resultat && Array.isArray(resultat.dates)) {
-            // Cas 2: És un objecte amb propietat dates
             datesArray = resultat.dates;
-            console.log('✅ Format: Objecte amb propietat dates');
         } else {
-            // Cas 3: Qualsevol altra cosa
             datesArray = [];
-            console.log('✅ Format: Desconegut, utilitzant array buit');
         }
         
         console.log('✅ Dates ocupades carregades per', immobleSeleccionat + ':', datesArray.length, 'dates');
-        console.log('✅ Dates específiques:', datesArray);
         
+        // Actualitzar les dates ocupades
         datesOcupades = datesArray;
         
         const dataActual = new Date();
@@ -1633,52 +1623,18 @@ async function carregarDatesOcupades() {
         document.getElementById('text-estat-calendari').innerHTML = 
             `✅ ${datesArray.length} dates ocupades per ${immobleSeleccionat} - Actualitzat: ${horaActualitzacio}`;
         
-        // Generar calendari sense afectar la selecció actual
-        generarCalendari();
+        // SOLAMENTE generar calendari si NO hi ha formulari visible
+        const formulariVisible = document.getElementById('resum-reserva').style.display !== 'none';
         
-        // Restaurar l'estat del formulari si estava visible
-        if (formulariVisible && dataIniciAnterior && dataFiAnterior) {
-            // Verificar que les dates seleccionades segueixen disponibles
-            const segueixenDisponibles = verificarDisponibilitatContinuada(dataIniciAnterior, dataFiAnterior);
-            
-            if (segueixenDisponibles) {
-                // Restaurar les dates seleccionades
-                dataIniciSeleccionada = dataIniciAnterior;
-                dataFiSeleccionada = dataFiAnterior;
-                datesValides = datesValidesAnterior;
-                
-                // Actualitzar els camps d'entrada
-                document.getElementById('data-inici').value = formatDataInput(dataIniciAnterior);
-                document.getElementById('data-fi').value = formatDataInput(dataFiAnterior);
-                
-                // Mantenir el formulari visible si estava visible
-                if (formulariVisible) {
-                    mostrarFormulariReserva(
-                        formatDataInput(dataIniciAnterior), 
-                        formatDataInput(dataFiAnterior)
-                    );
-                }
-                
-                console.log('✅ Formulari restaurat després de l\'actualització');
-            } else {
-                // Si ja no estan disponibles, amagar el formulari i mostrar missatge
-                amagarFormulariReserva();
-                amagarBotoContinuar();
-                mostrarMissatge(
-                    document.getElementById('missatge-disponibilitat'), 
-                    '⚠️ Les dates seleccionades ja no estan disponibles. Si us plau, selecciona unes dates diferents.', 
-                    'error'
-                );
-                console.log('❌ Dates ja no disponibles, formulari amagat');
-            }
+        if (!formulariVisible) {
+            generarCalendari();
+        } else {
+            console.log('📋 Formulari visible - No es regenera el calendari per no interrompre');
         }
         
-        // Si hi ha dates seleccionades, verificar novament la disponibilitat
-        const dataInici = document.getElementById('data-inici').value;
-        const dataFi = document.getElementById('data-fi').value;
-        if (dataInici && dataFi && datesValides && !formulariVisible) {
-            console.log('🔍 Re-verificant disponibilitat amb les dades actualitzades...');
-            verificarDisponibilitat();
+        // Si hi ha formulari visible, verificar discretament si les dates segueixen disponibles
+        if (formulariVisible && dataIniciSeleccionada && dataFiSeleccionada) {
+            verificarDisponibilitatSilenciosa();
         }
         
     } catch (error) {
@@ -1686,9 +1642,42 @@ async function carregarDatesOcupades() {
         datesOcupades = [];
         document.getElementById('text-estat-calendari').textContent = 
             `❌ Error carregant dates ocupades per ${immobleSeleccionat}`;
-        generarCalendari();
+        
+        // Només regenerar calendari si no hi ha formulari visible
+        const formulariVisible = document.getElementById('resum-reserva').style.display !== 'none';
+        if (!formulariVisible) {
+            generarCalendari();
+        }
     }
 }
+// Verificació silenciosa de disponibilitat (sense interrompre l'usuari)
+function verificarDisponibilitatSilenciosa() {
+    if (!dataIniciSeleccionada || !dataFiSeleccionada) return;
+    
+    const dataActual = new Date(dataIniciSeleccionada);
+    let totesDisponibles = true;
+    
+    // Verificar totes les dates del rang
+    while (dataActual < dataFiSeleccionada) {
+        if (estaOcupat(dataActual)) {
+            totesDisponibles = false;
+            break;
+        }
+        dataActual.setDate(dataActual.getDate() + 1);
+    }
+    
+    if (!totesDisponibles) {
+        console.log('⚠️ Les dates seleccionades ja no estan disponibles');
+        // Aquí pots afegir un indicador visual discret si vols
+        // Per exemple, canviar el color del botó de reserva
+        document.getElementById('btn-reservar').style.background = '#e74c3c';
+        document.getElementById('btn-reservar').title = 'Les dates ja no estan disponibles - Si us plau, selecciona unes dates diferents';
+    } else {
+        // Restaurar estat normal
+        document.getElementById('btn-reservar').style.background = '';
+        document.getElementById('btn-reservar').title = '';
+    }
+}        
 // Funció per verificar si les dates seleccionades segueixen disponibles després de l'actualització
 function verificarDisponibilitatContinuada(dataInici, dataFi) {
     // Crear un array amb totes les dates del rang seleccionat
@@ -1758,8 +1747,10 @@ async function obtenirPreuImmoble() {
         }
         
         // Generar calendari visual (començant per Dilluns) - Versió millorada
-function generarCalendari() {
-    console.log('📆 Generant calendari per:', immobleSeleccionat);
+// Generar calendari visual (VERSIÓ MILLORADA)
+function generarCalendari(preservarSeleccions = true) {
+    console.log('📆 Generant calendari per:', immobleSeleccionat, 'Preservant seleccions:', preservarSeleccions);
+    
     const calendariDiv = document.getElementById('calendari');
     const mesDisplay = document.getElementById('mes-actual');
     
@@ -1776,7 +1767,7 @@ function generarCalendari() {
     let html = '';
     let diesOcupats = 0;
     
-    // AJUST: Començar per Dilluns (Dilluns = 1, Diumenge = 0)
+    // AJUST: Començar per Dilluns
     let diaIniciSetmana = primerDia.getDay();
     if (diaIniciSetmana === 0) {
         diaIniciSetmana = 6;
@@ -1810,10 +1801,10 @@ function generarCalendari() {
             diesOcupats++;
         }
         
-        // Verificar si està seleccionat (mantenir les seleccions existents)
-        if (dataIniciSeleccionada && dataActual.getTime() === dataIniciSeleccionada.getTime()) {
+        // Verificar si està seleccionat (SOLAMENTE si preservarSeleccions és true)
+        if (preservarSeleccions && dataIniciSeleccionada && dataActual.getTime() === dataIniciSeleccionada.getTime()) {
             classe += ' seleccionat';
-        } else if (dataFiSeleccionada && dataActual.getTime() === dataFiSeleccionada.getTime()) {
+        } else if (preservarSeleccions && dataFiSeleccionada && dataActual.getTime() === dataFiSeleccionada.getTime()) {
             classe += ' seleccionat';
         }
         
@@ -2108,6 +2099,7 @@ function tancarModal() {
 </body>
 
 </html>
+
 
 
 
