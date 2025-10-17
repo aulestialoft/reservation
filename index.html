@@ -1559,12 +1559,21 @@ async function carregarDatesOcupades() {
 }
         
         // Obtenir preu de l'immoble
-       async function obtenirPreuImmoble() {
+async function obtenirPreuImmoble() {
     try {
         const resultat = await ferPeticioGS('obtenirPreuImmoble', {
             immoble: immobleSeleccionat
         });
-        preuPerNit = resultat.preu;
+        
+        // ✅ CORRECCIÓ: Verificar si és un número directe o un objecte amb propietat preu
+        if (typeof resultat === 'number') {
+            preuPerNit = resultat;
+        } else if (resultat && typeof resultat.preu === 'number') {
+            preuPerNit = resultat.preu;
+        } else {
+            preuPerNit = immobleSeleccionat === 'Loft Barcelona' ? 120 : 85;
+        }
+        
         document.getElementById('resum-preu-nit').textContent = preuPerNit + ' €';
     } catch (error) {
         console.error('Error obtenint preu:', error);
@@ -1889,6 +1898,7 @@ async function carregarDatesOcupades() {
 </body>
 
 </html>
+
 
 
 
