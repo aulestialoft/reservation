@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aulèstia - Reserves d'Allotjament</title>
+    
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ca',
+                includedLanguages: 'ca,es,en,fr,de,it,pt,ru,zh-CN,ja,ar',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23ffffff10"><polygon points="0,100 1000,0 1000,100"/></svg>');
+            background-size: cover;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .tagline {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            position: relative;
+        }
+        
+        .nav-tab {
+            padding: 12px 30px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-tab:hover, .nav-tab.active {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+        
+        /* Selector d'idiomes */
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .google-translate-container {
+            background: rgba(255,255,255,0.9);
+            border-radius: 8px;
+            padding: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        /* Seccions */
+        .section {
+            display: none;
+            padding: 3rem 2rem;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, #3498db, #27ae60);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        /* Presentació d'Immobles */
+        .immobles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .immoble-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+        }
+        
+        .immoble-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .immoble-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+        }
+        
+        .immoble-content {
+            padding: 1.5rem;
+        }
+        
+        .immoble-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .immoble-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .immoble-features {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .feature {
+            background: #f8f9fa;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+        
+        .immoble-price {
+            font-size: 1.3rem;
+            color: #27ae60;
+            font-weight: bold;
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        /* Sistema de Reserves (el que ja teníem) */
+        .selector-immoble {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-immoble {
+            padding: 1.5rem;
+            border: 3px solid #e9ecef;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-immoble:hover {
+            border-color: #3498db;
+            transform: translateY(-2px);
+        }
+        
+        .btn-immoble.seleccionat {
+            border-color: #27ae60;
+            background: #27ae60;
+            color: white;
+        }
+        
+        .seccio-dates {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .inputs-dates {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .calendari-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            margin-top: 1rem;
+        }
+        
+        .calendari-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0 1rem;
+        }
+        
+        .calendari-mes {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .btn-nav {
+            background: #3498db;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .btn-nav:hover {
+            background: #2980b9;
+        }
+        
+        .dies-setmana {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .dia-setmana {
+            padding: 10px 5px;
+        }
+        
+        .dies-mes {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .dia {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            background: white;
+            position: relative;
+        }
+        
+        .dia:hover {
+            background: #3498db;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .dia.buit {
+            background: transparent;
+            cursor: default;
+        }
+        
+        .dia.buit:hover {
+            transform: none;
+            background: transparent;
+        }
+        
+        .dia.passat {
+            background: #f8f9fa;
+            color: #adb5bd;
+            cursor: not-allowed;
+        }
+        
+        .dia.passat:hover {
+            background: #f8f9fa;
+            color: #adb5bd;
+            transform: none;
+        }
+        
+        .dia.avui {
+            background: #3498db;
+            color: white;
+            border-color: #2c3e50;
+        }
+        
+        .dia.ocupat {
+            background: #e74c3c;
+            color: white;
+            cursor: not-allowed;
+        }
+        
+        .dia.ocupat:hover {
+            background: #e74c3c;
+            transform: none;
+        }
+        
+        .dia.seleccionat {
+            background: #27ae60;
+            color: white;
+            border-color: #27ae60;
+        }
+        
+        .form-grup {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            background: white;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .btn-verificar {
+            width: 100%;
+            padding: 12px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-verificar:hover {
+            background: #2980b9;
+        }
+        
+        .btn-continuar {
+            width: 100%;
+            padding: 15px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .btn-continuar:hover {
+            background: #219653;
+            transform: translateY(-2px);
+        }
+        
+        .missatge {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .missatge.exit {
+            background: #d5f4e6;
+            color: #27ae60;
+            border: 1px solid #27ae60;
+        }
+        
+        .missatge.error {
+            background: #fadbd8;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+        
+        .formulari-reserva {
+            background: white;
+            padding: 1.5rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+        }
+        
+        .resum-reserva {
+            background: #e8f6f3;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .resum-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding: 0.3rem 0;
+        }
+        
+        .resum-total {
+            border-top: 2px solid #2c3e50;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .btn-reservar {
+            width: 100%;
+            padding: 15px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-reservar:hover {
+            background: #219653;
+            transform: translateY(-2px);
+        }
+        
+        .btn-reservar:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #856404;
+        }
+        
+        .legenda {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .legenda-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .legenda-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 1rem;
+            color: #6c757d;
+        }
+        
+        .estat-calendari {
+            text-align: center;
+            padding: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .auto-update-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #27ae60;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* Estils per als calendaris de selecció */
+        .calendari-seleccio {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 300px;
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            margin-top: 5px;
+        }
+
+        .calendari-seleccio .calendari-header {
+            padding: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .calendari-seleccio .dies-setmana {
+            margin-bottom: 5px;
+        }
+
+        .calendari-seleccio .dia {
+            font-size: 0.9rem;
+            padding: 5px;
+        }
+
+        .calendari-seleccio .calendari-mes {
+            font-size: 1.1rem;
+        }
+
+        .calendari-seleccio .btn-nav {
+            width: 30px;
+            height: 30px;
+            font-size: 1rem;
+        }
+
+        .data-input-wrapper {
+            position: relative;
+        }
+
+        .data-input-wrapper input {
+            cursor: pointer;
+        }
+
+        input[type="date"] {
+            position: relative;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            display: none;
+        }
+
+        .data-input-wrapper::after {
+            content: "📅";
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+
+        .footer-link {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #2980b9;
+        }
+
+        /* Estils per al selector de Google Translate */
+        .goog-te-gadget-simple {
+            background-color: transparent !important;
+            border: none !important;
+            padding: 8px 12px !important;
+            font-size: 14px !important;
+            color: #2c3e50 !important;
+        }
+        
+        .goog-te-gadget-simple .goog-te-menu-value span {
+            color: #2c3e50 !important;
+        }
+        
+        .goog-te-gadget-simple .goog-te-menu-value span:first-child {
+            color: #2c3e50 !important;
+        }
+        
+        .goog-te-gadget-simple .goog-te-menu-value span:last-child {
+            display: none !important;
+        }
+        
+        .goog-te-gadget-simple .goog-te-menu-value:before {
+            content: "🌐";
+            margin-right: 8px;
+        }
+        
+        /* Amagar la barra superior de Google Translate */
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+        
+        body {
+            top: 0px !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .immobles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .selector-immoble {
+                grid-template-columns: 1fr;
+            }
+            
+            .inputs-dates {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .nav-tab {
+                width: 200px;
+                text-align: center;
+            }
+            
+            .language-selector {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="language-selector">
+                <div class="google-translate-container">
+                    <div id="google_translate_element"></div>
+                </div>
+            </div>
+            
+            <div class="logo">AULÈSTIA</div>
+            <div class="tagline">Allotjaments Únics al Cor de Barcelona</div>
+            
+            <div class="nav-tabs">
+                <a href="#immobles" class="nav-tab" onclick="mostrarSeccio('immobles')">📋 Els Nostres Immobles</a>
+                <a href="#reserves" class="nav-tab" onclick="mostrarSeccio('reserves')">📅 Fer Reserva</a>
+            </div>
+        </header>
+
+        <!-- Secció d'Inici -->
+        <section id="inici" class="section active">
+            <h2 class="section-title">Benvingut a Aulèstia</h2>
+            
+            <div style="text-align: center; max-width: 800px; margin: 0 auto 3rem;">
+                <p style="font-size: 1.2rem; line-height: 1.8; color: #555; margin-bottom: 2rem;">
+                    Descobreix allotjaments únic al cor de Barcelona. A Aulèstia t'ofereim experiències 
+                    autèntiques en immobles cuidadosament seleccionats per a la teva estada perfecta.
+                </p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                    <div style="text-align: center; padding: 2rem; background: #f8f9fa; border-radius: 15px;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🏠</div>
+                        <h3 style="color: #2c3e50; margin-bottom: 1rem;">Allotjaments Únics</h3>
+                        <p style="color: #666;">Allotjaments amb caràcter i personalitat pròpia</p>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 2rem; background: #f8f9fa; border-radius: 15px;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📍</div>
+                        <h3 style="color: #2c3e50; margin-bottom: 1rem;">Ubicació Privilegiada</h3>
+                        <p style="color: #666;">Al cor del barri més emblemàtic de Barcelona</p>
+                        <div style="width: 100%; height: 300px; margin-top: 1rem; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2993.188345145789!2d2.143258976337822!3d41.3898999712957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a4987b5b4e7c1f%3A0x1fa9918d2f7c4b0!2sCarrer%20d'Aul%C3%A8stia%20i%20Pijoan%2C%20Barcelona!5e0!3m2!1sca!2ses!4v1700000000000!5m2!1sca!2ses" 
+        width="100%" 
+        height="100%" 
+        style="border:0;" 
+        allowfullscreen="" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <button onclick="mostrarSeccio('reserves')" style="background: linear-gradient(135deg, #3498db, #27ae60); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-size: 1.2rem; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    🚀 Fer Reserva Ara
+                </button>
+            </div>
+        </section>
+
+        <!-- Secció d'Immobles -->
+        <section id="immobles" class="section">
+            <h2 class="section-title">Els Nostres Immobles</h2>
+            
+            <div class="immobles-grid">
+                <!-- Loft Barcelona -->
+                <div class="immoble-card">
+                    <div class="immoble-image">
+                        <img src="https://a0.muscache.com/im/pictures/74cfb7e2-82b3-4e55-9b0c-58853767fc04.jpg?im_w=1200" alt="Habitació Gràcia" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="immoble-content">
+                        <h3 class="immoble-title">Loft Barcelona</h3>
+                        <p class="immoble-description">
+                            Un loft d'estil industrial situat al cor del barri de Gràcia. Amb espais oberts, 
+                            llum natural abundants i una decoració que combina l'antiguitat amb el modern.
+                        </p>
+                        <div class="immoble-features">
+                            <span class="feature">🛏️ 2 habitacions</span>
+                            <span class="feature">🛁 1 bany</span>
+                            <span class="feature">👥 4 persones</span>
+                            <span class="feature">📶 WiFi</span>
+                        </div>
+                        <div class="immoble-price">
+                            Des de 120€ / nit
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Habitació Gràcia -->
+                <div class="immoble-card">
+                    <div class="immoble-image">
+                        <img src="https://www.hotelpaseodegracia.es/wp-content/uploads/2019/03/Standard-Barcelona-07.jpg" alt="Habitació Gràcia" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="immoble-content">
+                        <h3 class="immoble-title">Habitació Gràcia</h3>
+                        <p class="immoble-description">
+                            Una habitació acollidora en un pis compartit al vibrant barri de Gràcia. 
+                            Perfecte per a viatgers que busquen autenticitat i una experiència local.
+                        </p>
+                        <div class="immoble-features">
+                            <span class="feature">🛏️ 1 habitació</span>
+                            <span class="feature">🛁 Bany compartit</span>
+                            <span class="feature">👥 2 persones</span>
+                            <span class="feature">🏙️ Terrassa</span>
+                        </div>
+                        <div class="immoble-price">
+                            Des de 85€ / nit
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button onclick="mostrarSeccio('reserves')" style="background: linear-gradient(135deg, #3498db, #27ae60); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-size: 1.2rem; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    📅 Reservar Ara
+                </button>
+            </div>
+        </section>
+
+        <!-- Secció de Reserves (el sistema que ja teníem) -->
+        <section id="reserves" class="section">
+            <h2 class="section-title">Fes la Teva Reserva</h2>
+            
+            <div class="main-content">
+                <!-- Selecció d'Immoble -->
+                <div class="selector-immoble">
+                    <div class="btn-immoble seleccionat" data-immoble="Loft Barcelona">
+                        🏠 Loft Barcelona
+                    </div>
+                    <div class="btn-immoble" data-immoble="Habitació Gràcia">
+                        🛏️ Habitació Gràcia
+                    </div>
+                </div>
+                
+                <!-- Secció de Dates -->
+                <div class="seccio-dates">
+                    <h3 style="margin-bottom: 1rem; color: #2c3e50;">📅 Selecciona les teves dates</h3>
+                    
+                    <div class="inputs-dates">
+                        <div class="form-grup">
+                            <label class="form-label" for="data-inici">Data d'entrada</label>
+                            <div class="data-input-wrapper">
+                                <input type="text" id="data-inici" class="form-input" readonly placeholder="Clica per seleccionar data">
+                                <div id="calendari-inici" class="calendari-seleccio" style="display: none;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-grup">
+                            <label class="form-label" for="data-fi">Data de sortida</label>
+                            <div class="data-input-wrapper">
+                                <input type="text" id="data-fi" class="form-input" readonly placeholder="Clica per seleccionar data">
+                                <div id="calendari-fi" class="calendari-seleccio" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-verificar" onclick="verificarDisponibilitat()">
+                        🔍 Verificar Disponibilitat
+                    </button>
+                    
+                    <div id="missatge-disponibilitat"></div>
+                    
+                    <!-- Botó Continuar (apareix quan hi ha disponibilitat) -->
+                    <div id="boto-continuar-container" style="display: none;">
+                        <button class="btn-continuar" onclick="continuarAmbReserva()">
+                            ➡️ Continuar amb la Reserva
+                        </button>
+                    </div>
+                    
+                    <!-- Calendari Visual -->
+                    <div class="calendari-container">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h4 style="color: #2c3e50; margin: 0;">📆 Calendari de Disponibilitat</h4>
+                            <button onclick="carregarDatesOcupades()" style="background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 0.9rem;">
+                                🔄 Actualitzar Ara
+                            </button>
+                        </div>
+                        
+                        <div class="calendari-header">
+                            <button class="btn-nav" onclick="canviarMes(-1)">←</button>
+                            <div class="calendari-mes" id="mes-actual">Carregant...</div>
+                            <button class="btn-nav" onclick="canviarMes(1)">→</button>
+                        </div>
+                        
+                        <!-- Dies de la setmana començant per Dilluns -->
+                        <div class="dies-setmana">
+                            <div class="dia-setmana">Dl</div>
+                            <div class="dia-setmana">Dt</div>
+                            <div class="dia-setmana">Dc</div>
+                            <div class="dia-setmana">Dj</div>
+                            <div class="dia-setmana">Dv</div>
+                            <div class="dia-setmana">Ds</div>
+                            <div class="dia-setmana">Dg</div>
+                        </div>
+                        
+                        <div class="dies-mes" id="calendari">
+                            <div class="loading">Carregant calendari...</div>
+                        </div>
+                        
+                        <div class="estat-calendari" id="estat-calendari">
+                            <span class="auto-update-indicator"></span>
+                            <span id="text-estat-calendari">Carregant dates ocupades...</span>
+                            <br>
+                            <small style="color: #6c757d; font-size: 0.8rem;">
+                                S'actualitza automàticament cada 20 segons
+                            </small>
+                        </div>
+                        
+                        <div class="legenda">
+                            <div class="legenda-item">
+                                <div class="legenda-color" style="background: white; border-color: #ddd;"></div>
+                                <span>Disponible</span>
+                            </div>
+                            <div class="legenda-item">
+                                <div class="legenda-color" style="background: #e74c3c;"></div>
+                                <span>Ocupat</span>
+                            </div>
+                            <div class="legenda-item">
+                                <div class="legenda-color" style="background: #3498db;"></div>
+                                <span>Avui</span>
+                            </div>
+                            <div class="legenda-item">
+                                <div class="legenda-color" style="background: #27ae60;"></div>
+                                <span>Seleccionat</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Formulari de Reserva -->
+                <div class="formulari-reserva" id="formulari-reserva">
+                    <h3 style="margin-bottom: 1rem; color: #2c3e50;">📋 Dades de la reserva</h3>
+                    
+                    <div class="info-box">
+                        💡 <strong>Instruccions:</strong> Selecciona l'immoble i les dates, després fes clic a "Verificar Disponibilitat". Quan estigui disponible, fes clic a "Continuar amb la Reserva" per omplir el formulari.
+                    </div>
+                    
+                    <div id="resum-reserva" style="display: none;">
+                        <div class="resum-reserva">
+                            <h4 style="margin-bottom: 1rem; color: #2c3e50;">Resum de la reserva</h4>
+                            <div class="resum-item">
+                                <span>Immoble:</span>
+                                <span id="resum-immoble">-</span>
+                            </div>
+                            <div class="resum-item">
+                                <span>Data d'entrada:</span>
+                                <span id="resum-data-inici">-</span>
+                            </div>
+                            <div class="resum-item">
+                                <span>Data de sortida:</span>
+                                <span id="resum-data-fi">-</span>
+                            </div>
+                            <div class="resum-item">
+                                <span>Nombre de nits:</span>
+                                <span id="resum-nits">0</span>
+                            </div>
+                            <div class="resum-item">
+                                <span>Preu per nit:</span>
+                                <span id="resum-preu-nit">0 €</span>
+                            </div>
+                            <div class="resum-item resum-total">
+                                <span>Preu total:</span>
+                                <span id="resum-total">0 €</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-grup">
+                            <label class="form-label" for="nom">Nom complet *</label>
+                            <input type="text" id="nom" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-grup">
+                            <label class="form-label" for="email">Email *</label>
+                            <input type="email" id="email" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-grup">
+                            <label class="form-label" for="telefon">Telèfon *</label>
+                            <input type="tel" id="telefon" class="form-input" required>
+                        </div>
+                        
+                        <button type="button" class="btn-reservar" id="btn-reservar" onclick="ferReserva()">
+                            🚀 Fer Reserva
+                        </button>
+                    </div>
+                    
+                    <div id="missatge-reserva"></div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <h3>AULÈSTIA</h3>
+                <p>Allotjaments únics al cor de Barcelona</p>
+                <div class="footer-links">
+                    <a href="#inici" class="footer-link" onclick="mostrarSeccio('inici')">Inici</a>
+                    <a href="#immobles" class="footer-link" onclick="mostrarSeccio('immobles')">Immobles</a>
+                    <a href="#reserves" class="footer-link" onclick="mostrarSeccio('reserves')">Reserves</a>
+                </div>
+                <p>&copy; 2024 Aulèstia. Tots els drets reservats.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Funcionalitat de navegació entre seccions
+        function mostrarSeccio(seccioId) {
+            // Amagar totes les seccions
+            document.querySelectorAll('.section').forEach(seccio => {
+                seccio.classList.remove('active');
+            });
+            
+            // Mostrar la secció seleccionada
+            document.getElementById(seccioId).classList.add('active');
+            
+            // Actualizar pestanyes actives
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Si és la secció de reserves, inicialitzar el calendari
+            if (seccioId === 'reserves') {
+                setTimeout(() => {
+                    generarCalendari();
+                    carregarDatesOcupades();
+                }, 100);
+            }
+        }
+
+        // EL CODI ORIGINAL DEL SISTEMA DE RESERVES ES MANTÉ IDÈNTIC
+        // Variables globals
+        let immobleSeleccionat = 'Loft Barcelona';
+        let preuPerNit = 0;
+        let datesValides = false;
+        let mesActual = new Date().getMonth();
+        let anyActual = new Date().getFullYear();
+        let datesOcupades = [];
+        let dataIniciSeleccionada = null;
+        let dataFiSeleccionada = null;
+        let intervalActualitzacio = null;
+        let comptadorActualitzacio = 0;
+        
+        // Variables pels calendaris de selecció
+        let calendariIniciVisible = false;
+        let calendariFiVisible = false;
+        let mesCalendariInici = new Date().getMonth();
+        let anyCalendariInici = new Date().getFullYear();
+        let mesCalendariFi = new Date().getMonth();
+        let anyCalendariFi = new Date().getFullYear();
+        
+        // Inicialització
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicialitzant sistema...');
+            
+            // Configurar selector d'immobles
+            document.querySelectorAll('.btn-immoble').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.btn-immoble').forEach(b => b.classList.remove('seleccionat'));
+                    this.classList.add('seleccionat');
+                    immobleSeleccionat = this.getAttribute('data-immoble');
+                    console.log('🏠 Immoble seleccionat:', immobleSeleccionat);
+                    
+                    // Netejar les dades anteriors
+                    datesOcupades = [];
+                    datesValides = false;
+                    dataIniciSeleccionada = null;
+                    dataFiSeleccionada = null;
+                    
+                    // Netejar els camps del formulari
+                    document.getElementById('data-inici').value = '';
+                    document.getElementById('data-fi').value = '';
+                    document.getElementById('nom').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('telefon').value = '';
+                    
+                    // Amagar calendaris de selecció
+                    amagarCalendarisSeleccio();
+                    
+                    // Amagar elements
+                    amagarBotoContinuar();
+                    amagarFormulariReserva();
+                    document.getElementById('missatge-disponibilitat').innerHTML = '';
+                    document.getElementById('missatge-reserva').innerHTML = '';
+                    
+                    // Carregar les dades del nou immoble
+                    obtenirPreuImmoble();
+                    carregarDatesOcupades();
+                    generarCalendari();
+                });
+            });
+            
+            // Configurar events pels calendaris de selecció
+            document.getElementById('data-inici').addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleCalendariInici();
+            });
+            
+            document.getElementById('data-fi').addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!dataIniciSeleccionada) {
+                    alert('Si us plau, selecciona primer la data d\'entrada');
+                    return;
+                }
+                toggleCalendariFi();
+            });
+            
+            // Tancar calendaris quan es faci clic fora (excepte als botons de navegació)
+            document.addEventListener('click', function(event) {
+                // Comprovar si el clic és fora dels calendaris i dels seus botons de navegació
+                const esBotoNav = event.target.classList.contains('btn-nav') || 
+                                  event.target.parentElement.classList.contains('btn-nav');
+                
+                const esDinsCalendari = event.target.closest('.calendari-seleccio') || 
+                                       event.target.closest('#data-inici') || 
+                                       event.target.closest('#data-fi');
+                
+                if (!esDinsCalendari && !esBotoNav) {
+                    amagarCalendarisSeleccio();
+                }
+            });
+            
+            // Carregar dades inicials
+            obtenirPreuImmoble();
+            generarCalendari();
+            
+            // Iniciar actualització automàtica
+            iniciarActualitzacioAutomatica();
+        });
+        
+        // Funcions pels calendaris de selecció
+        function toggleCalendariInici() {
+            calendariIniciVisible = !calendariIniciVisible;
+            if (calendariIniciVisible) {
+                mostrarCalendariInici();
+                calendariFiVisible = false;
+                document.getElementById('calendari-fi').style.display = 'none';
+            } else {
+                document.getElementById('calendari-inici').style.display = 'none';
+            }
+        }
+        
+        function toggleCalendariFi() {
+            calendariFiVisible = !calendariFiVisible;
+            if (calendariFiVisible) {
+                mostrarCalendariFi();
+                calendariIniciVisible = false;
+                document.getElementById('calendari-inici').style.display = 'none';
+            } else {
+                document.getElementById('calendari-fi').style.display = 'none';
+            }
+        }
+        
+        function amagarCalendarisSeleccio() {
+            calendariIniciVisible = false;
+            calendariFiVisible = false;
+            document.getElementById('calendari-inici').style.display = 'none';
+            document.getElementById('calendari-fi').style.display = 'none';
+        }
+        
+        function mostrarCalendariInici() {
+            const calendariDiv = document.getElementById('calendari-inici');
+            generarCalendariSeleccio(calendariDiv, mesCalendariInici, anyCalendariInici, 'inici');
+            calendariDiv.style.display = 'block';
+        }
+        
+        function mostrarCalendariFi() {
+            const calendariDiv = document.getElementById('calendari-fi');
+            generarCalendariSeleccio(calendariDiv, mesCalendariFi, anyCalendariFi, 'fi');
+            calendariDiv.style.display = 'block';
+        }
+        
+        function generarCalendariSeleccio(calendariDiv, mes, any, tipus) {
+            const nomsMesos = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 
+                              'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
+            
+            const avui = new Date();
+            const dataMinima = tipus === 'fi' && dataIniciSeleccionada ? 
+                new Date(dataIniciSeleccionada.getTime() + 24 * 60 * 60 * 1000) : avui;
+            
+            let html = `
+                <div class="calendari-header">
+                    <button class="btn-nav" onclick="canviarMesSeleccio(-1, '${tipus}')">←</button>
+                    <div class="calendari-mes">${nomsMesos[mes]} ${any}</div>
+                    <button class="btn-nav" onclick="canviarMesSeleccio(1, '${tipus}')">→</button>
+                </div>
+                <div class="dies-setmana">
+                    <div class="dia-setmana">Dl</div>
+                    <div class="dia-setmana">Dt</div>
+                    <div class="dia-setmana">Dc</div>
+                    <div class="dia-setmana">Dj</div>
+                    <div class="dia-setmana">Dv</div>
+                    <div class="dia-setmana">Ds</div>
+                    <div class="dia-setmana">Dg</div>
+                </div>
+                <div class="dies-mes">
+            `;
+            
+            // Obtenir primer i últim dia del mes
+            const primerDia = new Date(any, mes, 1);
+            const ultimDia = new Date(any, mes + 1, 0);
+            
+            // AJUST: Començar per Dilluns
+            let diaIniciSetmana = primerDia.getDay();
+            if (diaIniciSetmana === 0) {
+                diaIniciSetmana = 6;
+            } else {
+                diaIniciSetmana = diaIniciSetmana - 1;
+            }
+            
+            // Afegir dies buits abans del primer dia
+            for (let i = 0; i < diaIniciSetmana; i++) {
+                html += '<div class="dia buit"></div>';
+            }
+            
+            // Afegir dies del mes
+            for (let dia = 1; dia <= ultimDia.getDate(); dia++) {
+                const dataActual = new Date(any, mes, dia);
+                let classe = 'dia';
+                let disabled = false;
+                
+                // Verificar si és avui
+                if (dataActual.toDateString() === avui.toDateString()) {
+                    classe += ' avui';
+                }
+                
+                // Verificar si és passat
+                if (dataActual < new Date(avui.getFullYear(), avui.getMonth(), avui.getDate())) {
+                    classe += ' passat';
+                    disabled = true;
+                }
+                
+                // Per data de sortida, verificar que sigui posterior a la data d'entrada
+                if (tipus === 'fi' && dataIniciSeleccionada) {
+                    if (dataActual <= dataIniciSeleccionada) {
+                        classe += ' passat';
+                        disabled = true;
+                    }
+                }
+                
+                // Verificar si està ocupat
+                if (estaOcupat(dataActual)) {
+                    classe += ' ocupat';
+                    disabled = true;
+                }
+                
+                // Verificar si està seleccionat
+                if (tipus === 'inici' && dataIniciSeleccionada && dataActual.getTime() === dataIniciSeleccionada.getTime()) {
+                    classe += ' seleccionat';
+                } else if (tipus === 'fi' && dataFiSeleccionada && dataActual.getTime() === dataFiSeleccionada.getTime()) {
+                    classe += ' seleccionat';
+                }
+                
+                if (disabled) {
+                    html += `<div class="${classe}">${dia}</div>`;
+                } else {
+                    html += `<div class="${classe}" onclick="seleccionarDataSeleccio('${dataActual.toISOString().split('T')[0]}', '${tipus}')">${dia}</div>`;
+                }
+            }
+            
+            html += '</div>';
+            calendariDiv.innerHTML = html;
+        }
+        
+        function canviarMesSeleccio(direccio, tipus) {
+            // Aturar la propagació per evitar que es tanqui el calendari
+            event.stopPropagation();
+            
+            if (tipus === 'inici') {
+                mesCalendariInici += direccio;
+                if (mesCalendariInici < 0) {
+                    mesCalendariInici = 11;
+                    anyCalendariInici--;
+                } else if (mesCalendariInici > 11) {
+                    mesCalendariInici = 0;
+                    anyCalendariInici++;
+                }
+                mostrarCalendariInici();
+            } else {
+                mesCalendariFi += direccio;
+                if (mesCalendariFi < 0) {
+                    mesCalendariFi = 11;
+                    anyCalendariFi--;
+                } else if (mesCalendariFi > 11) {
+                    mesCalendariFi = 0;
+                    anyCalendariFi++;
+                }
+                mostrarCalendariFi();
+            }
+        }
+        
+        function seleccionarDataSeleccio(dataString, tipus) {
+            const data = new Date(dataString);
+            
+            if (tipus === 'inici') {
+                dataIniciSeleccionada = data;
+                document.getElementById('data-inici').value = formatDataInput(data);
+                amagarCalendarisSeleccio();
+                
+                // Si ja hi ha una data de sortida anterior a la nova data d'inici, netejar-la
+                if (dataFiSeleccionada && dataFiSeleccionada <= data) {
+                    dataFiSeleccionada = null;
+                    document.getElementById('data-fi').value = '';
+                }
+            } else {
+                // Assegurar que la data de sortida sigui posterior a la d'entrada
+                if (dataIniciSeleccionada && data > dataIniciSeleccionada) {
+                    dataFiSeleccionada = data;
+                    document.getElementById('data-fi').value = formatDataInput(data);
+                    amagarCalendarisSeleccio();
+                } else {
+                    alert('La data de sortida ha de ser posterior a la data d\'entrada');
+                }
+            }
+            
+            generarCalendari();
+        }
+        
+        function formatDataInput(data) {
+            return data.toLocaleDateString('ca-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+        
+        // Iniciar actualització automàtica cada 20 segons
+        function iniciarActualitzacioAutomatica() {
+            console.log('⏰ Iniciant actualització automàtica cada 20 segons');
+            
+            // Carregar dates immediatament
+            carregarDatesOcupades();
+            
+            // Configurar interval cada 20 segons
+            intervalActualitzacio = setInterval(function() {
+                comptadorActualitzacio++;
+                console.log(`🔄 Actualització automàtica #${comptadorActualitzacio} per ${immobleSeleccionat}`);
+                carregarDatesOcupades();
+            }, 20000); // 20 segons
+            
+            // Actualitzar el comptador visual cada segon
+            setInterval(actualitzarComptadorVisual, 1000);
+        }
+        
+        // Actualitzar el comptador visual
+        function actualitzarComptadorVisual() {
+            const ara = new Date();
+            const segonsRestants = 20 - (Math.floor(ara.getTime() / 1000) % 20);
+            document.getElementById('text-estat-calendari').innerHTML = 
+                `Dates actualitzades automàticament - Propera actualització en ${segonsRestants}s`;
+        }
+        
+        // Carregar dates ocupades del Google Sheets
+        function carregarDatesOcupades() {
+            console.log('📅 Carregant dates ocupades per:', immobleSeleccionat);
+            document.getElementById('text-estat-calendari').textContent = 'Carregant dates ocupades...';
+            
+            google.script.run
+                .withSuccessHandler(function(dates) {
+                    console.log('✅ Dates ocupades carregades per', immobleSeleccionat + ':', dates.length, 'dates');
+                    datesOcupades = dates;
+                    
+                    const dataActual = new Date();
+                    const horaActualitzacio = dataActual.toLocaleTimeString('ca-ES');
+                    document.getElementById('text-estat-calendari').innerHTML = 
+                        `✅ ${dates.length} dates ocupades per ${immobleSeleccionat} - Actualitzat: ${horaActualitzacio}`;
+                    
+                    generarCalendari();
+                    
+                    // Si hi ha dates seleccionades, verificar novament la disponibilitat
+                    const dataInici = document.getElementById('data-inici').value;
+                    const dataFi = document.getElementById('data-fi').value;
+                    if (dataInici && dataFi && datesValides) {
+                        console.log('🔍 Re-verificant disponibilitat amb les dades actualitzades...');
+                        verificarDisponibilitat();
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    console.error('❌ Error carregant dates ocupades per', immobleSeleccionat + ':', error);
+                    datesOcupades = [];
+                    document.getElementById('text-estat-calendari').textContent = 
+                        `❌ Error carregant dates ocupades per ${immobleSeleccionat}`;
+                    generarCalendari();
+                })
+                .obtenirDatesOcupades(immobleSeleccionat);
+        }
+        
+        // Obtenir preu de l'immoble
+        function obtenirPreuImmoble() {
+            google.script.run
+                .withSuccessHandler(function(preu) {
+                    preuPerNit = preu;
+                    console.log('💰 Preu per nit de', immobleSeleccionat + ':', preu + '€');
+                    document.getElementById('resum-preu-nit').textContent = preu + ' €';
+                })
+                .obtenirPreuImmoble(immobleSeleccionat);
+        }
+        
+        // Funció per comprovar si una data està ocupada
+        function estaOcupat(data) {
+            const dataString = data.toISOString().split('T')[0];
+            return datesOcupades.includes(dataString);
+        }
+        
+        // Generar calendari visual (començant per Dilluns)
+        function generarCalendari() {
+            console.log('📆 Generant calendari per:', immobleSeleccionat);
+            const calendariDiv = document.getElementById('calendari');
+            const mesDisplay = document.getElementById('mes-actual');
+            
+            // Actualitzar display del mes
+            const nomsMesos = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 
+                              'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
+            mesDisplay.textContent = `${nomsMesos[mesActual]} ${anyActual}`;
+            
+            // Obtenir primer i últim dia del mes
+            const primerDia = new Date(anyActual, mesActual, 1);
+            const ultimDia = new Date(anyActual, mesActual + 1, 0);
+            const avui = new Date();
+            
+            let html = '';
+            let diesOcupats = 0;
+            
+            // AJUST: Començar per Dilluns (Dilluns = 1, Diumenge = 0)
+            let diaIniciSetmana = primerDia.getDay();
+            if (diaIniciSetmana === 0) {
+                diaIniciSetmana = 6;
+            } else {
+                diaIniciSetmana = diaIniciSetmana - 1;
+            }
+            
+            // Afegir dies buits abans del primer dia
+            for (let i = 0; i < diaIniciSetmana; i++) {
+                html += '<div class="dia buit"></div>';
+            }
+            
+            // Afegir dies del mes
+            for (let dia = 1; dia <= ultimDia.getDate(); dia++) {
+                const dataActual = new Date(anyActual, mesActual, dia);
+                let classe = 'dia';
+                
+                // Verificar si és avui
+                if (dataActual.toDateString() === avui.toDateString()) {
+                    classe += ' avui';
+                }
+                
+                // Verificar si és passat
+                if (dataActual < new Date(avui.getFullYear(), avui.getMonth(), avui.getDate())) {
+                    classe += ' passat';
+                }
+                
+                // Verificar si està ocupat
+                if (estaOcupat(dataActual)) {
+                    classe += ' ocupat';
+                    diesOcupats++;
+                }
+                
+                // Verificar si està seleccionat
+                if (dataIniciSeleccionada && dataActual.getTime() === dataIniciSeleccionada.getTime()) {
+                    classe += ' seleccionat';
+                } else if (dataFiSeleccionada && dataActual.getTime() === dataFiSeleccionada.getTime()) {
+                    classe += ' seleccionat';
+                }
+                
+                html += `<div class="${classe}" data-data="${dataActual.toISOString().split('T')[0]}">${dia}</div>`;
+            }
+            
+            calendariDiv.innerHTML = html;
+            
+            // Afegir event listeners als dies disponibles
+            calendariDiv.querySelectorAll('.dia:not(.buit):not(.passat):not(.ocupat)').forEach(dia => {
+                dia.addEventListener('click', function() {
+                    const dataString = this.getAttribute('data-data');
+                    seleccionarDataCalendari(dataString);
+                });
+            });
+            
+            console.log('✅ Calendari generat per', immobleSeleccionat + '. Dies ocupats:', diesOcupats);
+        }
+        
+        // Canviar mes al calendari
+        function canviarMes(direccio) {
+            mesActual += direccio;
+            
+            if (mesActual < 0) {
+                mesActual = 11;
+                anyActual--;
+            } else if (mesActual > 11) {
+                mesActual = 0;
+                anyActual++;
+            }
+            
+            generarCalendari();
+        }
+        
+        // Seleccionar data des del calendari
+        function seleccionarDataCalendari(dataString) {
+            const data = new Date(dataString);
+            
+            if (!dataIniciSeleccionada || (dataIniciSeleccionada && dataFiSeleccionada)) {
+                // Nova selecció
+                dataIniciSeleccionada = data;
+                dataFiSeleccionada = null;
+                document.getElementById('data-inici').value = formatDataInput(data);
+                document.getElementById('data-fi').value = '';
+            } else if (data > dataIniciSeleccionada) {
+                // Completar selecció
+                dataFiSeleccionada = data;
+                document.getElementById('data-fi').value = formatDataInput(data);
+                verificarDisponibilitat();
+            } else {
+                // Data anterior, començar de nou
+                dataIniciSeleccionada = data;
+                dataFiSeleccionada = null;
+                document.getElementById('data-inici').value = formatDataInput(data);
+                document.getElementById('data-fi').value = '';
+            }
+            
+            generarCalendari();
+        }
+        
+        // Verificar disponibilitat
+        function verificarDisponibilitat() {
+            const dataInici = document.getElementById('data-inici').value;
+            const dataFi = document.getElementById('data-fi').value;
+            const missatgeDiv = document.getElementById('missatge-disponibilitat');
+            
+            // Validacions bàsiques
+            if (!dataInici || !dataFi) {
+                mostrarMissatge(missatgeDiv, 'Si us plau, selecciona tant la data d\'entrada com la de sortida', 'error');
+                return;
+            }
+            
+            if (dataFi <= dataInici) {
+                mostrarMissatge(missatgeDiv, 'La data de sortida ha de ser posterior a la data d\'entrada', 'error');
+                return;
+            }
+            
+            // Actualitzar variables
+            dataIniciSeleccionada = new Date(dataInici.split('/').reverse().join('-'));
+            dataFiSeleccionada = new Date(dataFi.split('/').reverse().join('-'));
+            
+            // Mostrar loading
+            mostrarMissatge(missatgeDiv, '🔍 Verificant disponibilitat...', 'exit');
+            
+            google.script.run
+                .withSuccessHandler(function(resultat) {
+                    if (resultat.disponible) {
+                        datesValides = true;
+                        mostrarMissatge(missatgeDiv, resultat.missatge, 'exit');
+                        mostrarBotoContinuar();
+                        amagarFormulariReserva();
+                        generarCalendari();
+                    } else {
+                        datesValides = false;
+                        mostrarMissatge(missatgeDiv, resultat.missatge, 'error');
+                        amagarBotoContinuar();
+                        amagarFormulariReserva();
+                        generarCalendari();
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    datesValides = false;
+                    mostrarMissatge(missatgeDiv, 'Error verificant disponibilitat: ' + error.toString(), 'error');
+                    amagarBotoContinuar();
+                    amagarFormulariReserva();
+                })
+                .verificarDisponibilitat(immobleSeleccionat, dataIniciSeleccionada.toISOString().split('T')[0], dataFiSeleccionada.toISOString().split('T')[0]);
+        }
+        
+        // Mostrar botó "Continuar amb la Reserva"
+        function mostrarBotoContinuar() {
+            document.getElementById('boto-continuar-container').style.display = 'block';
+        }
+        
+        // Amagar botó "Continuar amb la Reserva"
+        function amagarBotoContinuar() {
+            document.getElementById('boto-continuar-container').style.display = 'none';
+        }
+        
+        // Continuar amb la reserva (mostrar formulari)
+        function continuarAmbReserva() {
+            const dataInici = document.getElementById('data-inici').value;
+            const dataFi = document.getElementById('data-fi').value;
+            
+            if (!dataInici || !dataFi) {
+                alert('Si us plau, selecciona les dates primer');
+                return;
+            }
+            
+            mostrarFormulariReserva(dataInici, dataFi);
+            
+            // Desplaçar-se automàticament al formulari
+            document.getElementById('formulari-reserva').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+        
+        // Mostrar formulari de reserva
+        function mostrarFormulariReserva(dataInici, dataFi) {
+            // Calcular nits i preu
+            const dataIniciObj = new Date(dataInici.split('/').reverse().join('-'));
+            const dataFiObj = new Date(dataFi.split('/').reverse().join('-'));
+            const nits = Math.ceil((dataFiObj - dataIniciObj) / (1000 * 60 * 60 * 24));
+            const preuTotal = nits * preuPerNit;
+            
+            // Actualitzar resum
+            document.getElementById('resum-immoble').textContent = immobleSeleccionat;
+            document.getElementById('resum-data-inici').textContent = formatData(dataIniciObj);
+            document.getElementById('resum-data-fi').textContent = formatData(dataFiObj);
+            document.getElementById('resum-nits').textContent = nits;
+            document.getElementById('resum-total').textContent = preuTotal.toFixed(2) + ' €';
+            
+            // Mostrar formulari
+            document.getElementById('resum-reserva').style.display = 'block';
+        }
+        
+        // Amagar formulari de reserva
+        function amagarFormulariReserva() {
+            document.getElementById('resum-reserva').style.display = 'none';
+        }
+        
+        // Fer reserva
+        function ferReserva() {
+            const nom = document.getElementById('nom').value;
+            const email = document.getElementById('email').value;
+            const telefon = document.getElementById('telefon').value;
+            const dataInici = document.getElementById('data-inici').value;
+            const dataFi = document.getElementById('data-fi').value;
+            const missatgeDiv = document.getElementById('missatge-reserva');
+            const btnReservar = document.getElementById('btn-reservar');
+            
+            // Validacions
+            if (!nom || !email || !telefon) {
+                mostrarMissatge(missatgeDiv, 'Si us plau, completa tots els camps del formulari', 'error');
+                return;
+            }
+            
+            if (!datesValides) {
+                mostrarMissatge(missatgeDiv, 'Si us plau, verifica primer la disponibilitat de les dates', 'error');
+                return;
+            }
+            
+            // Preparar dades
+            const dadesReserva = {
+                nom: nom,
+                email: email,
+                telefon: telefon,
+                immoble: immobleSeleccionat,
+                data_inici: dataIniciSeleccionada.toISOString().split('T')[0],
+                data_fi: dataFiSeleccionada.toISOString().split('T')[0]
+            };
+            
+            // Deshabilitar botó
+            btnReservar.disabled = true;
+            btnReservar.textContent = '🔄 Processant...';
+            
+            google.script.run
+                .withSuccessHandler(function(resultat) {
+                    if (resultat.exit) {
+                        mostrarMissatge(missatgeDiv, resultat.missatge, 'exit');
+                        // Netejar formulari
+                        document.getElementById('nom').value = '';
+                        document.getElementById('email').value = '';
+                        document.getElementById('telefon').value = '';
+                        document.getElementById('data-inici').value = '';
+                        document.getElementById('data-fi').value = '';
+                        dataIniciSeleccionada = null;
+                        dataFiSeleccionada = null;
+                        amagarFormulariReserva();
+                        amagarBotoContinuar();
+                        // Actualitzar dates ocupades després de fer una reserva
+                        carregarDatesOcupades();
+                    } else {
+                        mostrarMissatge(missatgeDiv, resultat.missatge, 'error');
+                    }
+                    btnReservar.disabled = false;
+                    btnReservar.textContent = '🚀 Fer Reserva';
+                })
+                .withFailureHandler(function(error) {
+                    mostrarMissatge(missatgeDiv, 'Error en la reserva: ' + error.toString(), 'error');
+                    btnReservar.disabled = false;
+                    btnReservar.textContent = '🚀 Fer Reserva';
+                })
+                .ferReserva(dadesReserva);
+        }
+        
+        // Funció auxiliar per formatar dates
+        function formatData(data) {
+            return data.toLocaleDateString('ca-ES', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+        
+        // Funció auxiliar per mostrar missatges
+        function mostrarMissatge(element, text, tipus) {
+            element.innerHTML = text;
+            element.className = `missatge ${tipus}`;
+            element.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
