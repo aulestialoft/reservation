@@ -1733,6 +1733,23 @@ async function carregarDatesOcupades() {
         function amagarFormulariReserva() {
             document.getElementById('resum-reserva').style.display = 'none';
         }
+        function netejarSeleccions() {
+    datesOcupades = [];
+    datesValides = false;
+    dataIniciSeleccionada = null;
+    dataFiSeleccionada = null;
+    
+    document.getElementById('data-inici').value = '';
+    document.getElementById('data-fi').value = '';
+    document.getElementById('nom').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('telefon').value = '';
+    
+    amagarBotoContinuar();
+    amagarFormulariReserva();
+    document.getElementById('missatge-disponibilitat').innerHTML = '';
+    document.getElementById('missatge-reserva').innerHTML = '';
+}
         
         // Fer reserva
         async function ferReserva() {
@@ -1809,5 +1826,6 @@ async function carregarDatesOcupades() {
 </body>
 
 </html>
+
 
 
