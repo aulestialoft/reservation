@@ -1119,6 +1119,43 @@
         let anyCalendariInici = new Date().getFullYear();
         let mesCalendariFi = new Date().getMonth();
         let anyCalendariFi = new Date().getFullYear();
+
+        // ✅ AFEGEIX AIXÒ AL PRINCIPI DEL TEU JAVASCRIPT (després de les variables globals)
+
+// Configuració - POSA LA TEVA URL DE GOOGLE APPS SCRIPT AQUÍ
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9bzou8hXde4UWH87_RXREu5kzINf3eJDLf_VHPdegegUwC0hPcDhmbDNbJvN_eTt7/exec';
+
+// Funció per fer peticions al Google Apps Script
+async function ferPeticioGS(accio, parametres = {}) {
+    try {
+        const formData = new FormData();
+        formData.append('action', accio);
+        
+        Object.keys(parametres).forEach(key => {
+            if (typeof parametres[key] === 'object') {
+                formData.append(key, JSON.stringify(parametres[key]));
+            } else {
+                formData.append(key, parametres[key]);
+            }
+        });
+        
+        const resposta = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!resposta.ok) {
+            throw new Error('Error en la resposta del servidor');
+        }
+        
+        return await resposta.json();
+        
+    } catch (error) {
+        console.error('Error en la petició:', error);
+        throw error;
+    }
+}
+
         
         // Inicialització
         document.addEventListener('DOMContentLoaded', function() {
@@ -1421,40 +1458,42 @@
                 `Dates actualitzades automàticament - Propera actualització en ${segonsRestants}s`;
         }
         
-        // Carregar dates ocupades del Google Sheets
-        function carregarDatesOcupades() {
-            console.log('📅 Carregant dates ocupades per:', immobleSeleccionat);
-            document.getElementById('text-estat-calendari').textContent = 'Carregant dates ocupades...';
-            
-            google.script.run
-                .withSuccessHandler(function(dates) {
-                    console.log('✅ Dates ocupades carregades per', immobleSeleccionat + ':', dates.length, 'dates');
-                    datesOcupades = dates;
-                    
-                    const dataActual = new Date();
-                    const horaActualitzacio = dataActual.toLocaleTimeString('ca-ES');
-                    document.getElementById('text-estat-calendari').innerHTML = 
-                        `✅ ${dates.length} dates ocupades per ${immobleSeleccionat} - Actualitzat: ${horaActualitzacio}`;
-                    
-                    generarCalendari();
-                    
-                    // Si hi ha dates seleccionades, verificar novament la disponibilitat
-                    const dataInici = document.getElementById('data-inici').value;
-                    const dataFi = document.getElementById('data-fi').value;
-                    if (dataInici && dataFi && datesValides) {
-                        console.log('🔍 Re-verificant disponibilitat amb les dades actualitzades...');
-                        verificarDisponibilitat();
-                    }
-                })
-                .withFailureHandler(function(error) {
-                    console.error('❌ Error carregant dates ocupades per', immobleSeleccionat + ':', error);
-                    datesOcupades = [];
-                    document.getElementById('text-estat-calendari').textContent = 
-                        `❌ Error carregant dates ocupades per ${immobleSeleccionat}`;
-                    generarCalendari();
-                })
-                .obtenirDatesOcupades(immobleSeleccionat);
+   // Carregar dates ocupades del Google Sheets (versió GitHub Pages)
+async function carregarDatesOcupades() {
+    console.log('📅 Carregant dates ocupades per:', immobleSeleccionat);
+    document.getElementById('text-estat-calendari').textContent = 'Carregant dates ocupades...';
+    
+    try {
+        const resultat = await ferPeticioGS('obtenirDatesOcupades', {
+            immoble: immobleSeleccionat
+        });
+        
+        console.log('✅ Dates ocupades carregades per', immobleSeleccionat + ':', resultat.dates.length, 'dates');
+        datesOcupades = resultat.dates;
+        
+        const dataActual = new Date();
+        const horaActualitzacio = dataActual.toLocaleTimeString('ca-ES');
+        document.getElementById('text-estat-calendari').innerHTML = 
+            `✅ ${resultat.dates.length} dates ocupades per ${immobleSeleccionat} - Actualitzat: ${horaActualitzacio}`;
+        
+        generarCalendari();
+        
+        // Si hi ha dates seleccionades, verificar novament la disponibilitat
+        const dataInici = document.getElementById('data-inici').value;
+        const dataFi = document.getElementById('data-fi').value;
+        if (dataInici && dataFi && datesValides) {
+            console.log('🔍 Re-verificant disponibilitat amb les dades actualitzades...');
+            verificarDisponibilitat();
         }
+        
+    } catch (error) {
+        console.error('❌ Error carregant dates ocupades per', immobleSeleccionat + ':', error);
+        datesOcupades = [];
+        document.getElementById('text-estat-calendari').textContent = 
+            `❌ Error carregant dates ocupades per ${immobleSeleccionat}`;
+        generarCalendari();
+    }
+}
         
         // Obtenir preu de l'immoble
         function obtenirPreuImmoble() {
@@ -1773,4 +1812,5 @@
         }
     </script>
 </body>
+
 </html>
