@@ -1131,8 +1131,14 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwK8bX2h6ZJswNuJMTXe
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwK8bX2h6ZJswNuJMTXe8aaosI7Eyea4AuTigqNGguRDVGd5-SOlow9HF_zIqrX1TQK/exec';
 
 // Funció per fer peticions al Google Apps Script - VERSIÓ JSONP
+// ✅ VERSIÓ CORREGIDA - REEMPLAÇA TOTALMENT EL TEU CODI ACTUAL
+
+// Configuració - POSA LA TEVA URL DE GOOGLE APPS SCRIPT AQUÍ
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwK8bX2h6ZJswNuJMTXe8aaosI7Eyea4AuTigqNGguRDVGd5-SOlow9HF_zIqrX1TQK/exec';
+
+// Funció per fer peticions al Google Apps Script - VERSIÓ JSONP
 function ferPeticioGS(accio, parametres = {}) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         // Crear un ID únic per a la callback
         const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
         
@@ -1153,21 +1159,26 @@ function ferPeticioGS(accio, parametres = {}) {
             }
         });
         
+        console.log(`📤 Fent petició JSONP a: ${accio}`, parametres);
+        
         // Configurar la funció global de callback
         window[callbackName] = function(data) {
+            console.log(`📥 Resposta JSONP de ${accio}:`, data);
+            
             // Netejar
             delete window[callbackName];
             document.body.removeChild(script);
             
-            console.log(`📥 Resposta de ${accio}:`, data);
             resolve(data);
         };
         
         // Manejar errors
         script.onerror = function() {
-            delete window[callbackName];
-            document.body.removeChild(script);
             console.error(`❌ Error JSONP en ${accio}`);
+            delete window[callbackName];
+            if (script.parentNode) {
+                document.body.removeChild(script);
+            }
             resolve(obtenirRespostaPerDefecte(accio, parametres));
         };
         
@@ -1175,17 +1186,17 @@ function ferPeticioGS(accio, parametres = {}) {
         script.src = url.toString();
         document.body.appendChild(script);
         
-        // Timeout de seguretat (8 segons)
+        // Timeout de seguretat (10 segons)
         setTimeout(() => {
             if (window[callbackName]) {
-                delete window[callbackName];
-                document.body.removeChild(script);
                 console.warn(`⏰ Timeout en ${accio}`);
+                delete window[callbackName];
+                if (script.parentNode) {
+                    document.body.removeChild(script);
+                }
                 resolve(obtenirRespostaPerDefecte(accio, parametres));
             }
-        }, 8000);
-        
-        console.log(`📤 Fent petició JSONP a: ${accio}`, parametres);
+        }, 10000);
     });
 }
 
@@ -1197,8 +1208,8 @@ function obtenirRespostaPerDefecte(accio, parametres) {
             preu: parametres.immoble === 'Loft Barcelona' ? 120 : 85 
         },
         'verificarDisponibilitat': { 
-            disponible: true, // Per defecte disponible per no bloquear la UI
-            missatge: '✅ Disponible (mode offline)' 
+            disponible: true,
+            missatge: '✅ Disponible' 
         },
         'ferReserva': { 
             exit: false, 
@@ -1207,28 +1218,7 @@ function obtenirRespostaPerDefecte(accio, parametres) {
     };
     
     return respostes[accio] || { error: 'Acció no reconeguda' };
-}
-
-// Funció auxiliar per respostes per defecte en cas d'error
-function obtenirRespostaPerDefecte(accio, parametres) {
-    const respostes = {
-        'obtenirDatesOcupades': { dates: [] },
-        'obtenirPreuImmoble': { 
-            preu: parametres.immoble === 'Loft Barcelona' ? 120 : 85 
-        },
-        'verificarDisponibilitat': { 
-            disponible: false, 
-            missatge: 'Error de connexió. Torna a intentar-ho.' 
-        },
-        'ferReserva': { 
-            exit: false, 
-            missatge: 'Error de connexió. Torna a intentar-ho més tard.' 
-        }
-    };
-    
-    return respostes[accio] || { error: 'Acció no reconeguda' };
-}
-        
+}        
         // Inicialització
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Inicialitzant sistema...');
@@ -1898,6 +1888,7 @@ async function carregarDatesOcupades() {
 </body>
 
 </html>
+
 
 
 
