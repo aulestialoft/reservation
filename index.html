@@ -1588,10 +1588,16 @@ function obtenirRespostaPerDefecte(accio, parametres) {
                 `Dates actualitzades automàticament - Propera actualització en ${segonsRestants}s`;
         }
         
-// Carregar dates ocupades del Google Sheets (versió GitHub Pages)
+// Carregar dates ocupades del Google Sheets (versió millorada)
 async function carregarDatesOcupades() {
     console.log('📅 Carregant dates ocupades per:', immobleSeleccionat);
     document.getElementById('text-estat-calendari').textContent = 'Carregant dates ocupades...';
+    
+    // Guardar l'estat actual del formulari abans de l'actualització
+    const formulariVisible = document.getElementById('resum-reserva').style.display !== 'none';
+    const dataIniciAnterior = dataIniciSeleccionada;
+    const dataFiAnterior = dataFiSeleccionada;
+    const datesValidesAnterior = datesValides;
     
     try {
         const resultat = await ferPeticioGS('obtenirDatesOcupades', {
@@ -1627,12 +1633,50 @@ async function carregarDatesOcupades() {
         document.getElementById('text-estat-calendari').innerHTML = 
             `✅ ${datesArray.length} dates ocupades per ${immobleSeleccionat} - Actualitzat: ${horaActualitzacio}`;
         
+        // Generar calendari sense afectar la selecció actual
         generarCalendari();
+        
+        // Restaurar l'estat del formulari si estava visible
+        if (formulariVisible && dataIniciAnterior && dataFiAnterior) {
+            // Verificar que les dates seleccionades segueixen disponibles
+            const segueixenDisponibles = verificarDisponibilitatContinuada(dataIniciAnterior, dataFiAnterior);
+            
+            if (segueixenDisponibles) {
+                // Restaurar les dates seleccionades
+                dataIniciSeleccionada = dataIniciAnterior;
+                dataFiSeleccionada = dataFiAnterior;
+                datesValides = datesValidesAnterior;
+                
+                // Actualitzar els camps d'entrada
+                document.getElementById('data-inici').value = formatDataInput(dataIniciAnterior);
+                document.getElementById('data-fi').value = formatDataInput(dataFiAnterior);
+                
+                // Mantenir el formulari visible si estava visible
+                if (formulariVisible) {
+                    mostrarFormulariReserva(
+                        formatDataInput(dataIniciAnterior), 
+                        formatDataInput(dataFiAnterior)
+                    );
+                }
+                
+                console.log('✅ Formulari restaurat després de l\'actualització');
+            } else {
+                // Si ja no estan disponibles, amagar el formulari i mostrar missatge
+                amagarFormulariReserva();
+                amagarBotoContinuar();
+                mostrarMissatge(
+                    document.getElementById('missatge-disponibilitat'), 
+                    '⚠️ Les dates seleccionades ja no estan disponibles. Si us plau, selecciona unes dates diferents.', 
+                    'error'
+                );
+                console.log('❌ Dates ja no disponibles, formulari amagat');
+            }
+        }
         
         // Si hi ha dates seleccionades, verificar novament la disponibilitat
         const dataInici = document.getElementById('data-inici').value;
         const dataFi = document.getElementById('data-fi').value;
-        if (dataInici && dataFi && datesValides) {
+        if (dataInici && dataFi && datesValides && !formulariVisible) {
             console.log('🔍 Re-verificant disponibilitat amb les dades actualitzades...');
             verificarDisponibilitat();
         }
@@ -1645,6 +1689,30 @@ async function carregarDatesOcupades() {
         generarCalendari();
     }
 }
+// Funció per verificar si les dates seleccionades segueixen disponibles després de l'actualització
+function verificarDisponibilitatContinuada(dataInici, dataFi) {
+    // Crear un array amb totes les dates del rang seleccionat
+    const datesEnRang = [];
+    const dataActual = new Date(dataInici);
+    
+    while (dataActual < dataFi) {
+        datesEnRang.push(dataActual.toISOString().split('T')[0]);
+        dataActual.setDate(dataActual.getDate() + 1);
+    }
+    
+    // Verificar si alguna d'aquestes dates està ocupada
+    for (const data of datesEnRang) {
+        if (datesOcupades.includes(data)) {
+            console.log(`❌ Data ocupada trobada: ${data}`);
+            return false;
+        }
+    }
+    
+    console.log('✅ Totes les dates del rang segueixen disponibles');
+    return true;
+}
+
+        
 // Obtenir preu de l'immoble
 async function obtenirPreuImmoble() {
     try {
@@ -1689,81 +1757,81 @@ async function obtenirPreuImmoble() {
             return datesOcupades.includes(dataString);
         }
         
-        // Generar calendari visual (començant per Dilluns)
-        function generarCalendari() {
-            console.log('📆 Generant calendari per:', immobleSeleccionat);
-            const calendariDiv = document.getElementById('calendari');
-            const mesDisplay = document.getElementById('mes-actual');
-            
-            // Actualitzar display del mes
-            const nomsMesos = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 
-                              'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
-            mesDisplay.textContent = `${nomsMesos[mesActual]} ${anyActual}`;
-            
-            // Obtenir primer i últim dia del mes
-            const primerDia = new Date(anyActual, mesActual, 1);
-            const ultimDia = new Date(anyActual, mesActual + 1, 0);
-            const avui = new Date();
-            
-            let html = '';
-            let diesOcupats = 0;
-            
-            // AJUST: Començar per Dilluns (Dilluns = 1, Diumenge = 0)
-            let diaIniciSetmana = primerDia.getDay();
-            if (diaIniciSetmana === 0) {
-                diaIniciSetmana = 6;
-            } else {
-                diaIniciSetmana = diaIniciSetmana - 1;
-            }
-            
-            // Afegir dies buits abans del primer dia
-            for (let i = 0; i < diaIniciSetmana; i++) {
-                html += '<div class="dia buit"></div>';
-            }
-            
-            // Afegir dies del mes
-            for (let dia = 1; dia <= ultimDia.getDate(); dia++) {
-                const dataActual = new Date(anyActual, mesActual, dia);
-                let classe = 'dia';
-                
-                // Verificar si és avui
-                if (dataActual.toDateString() === avui.toDateString()) {
-                    classe += ' avui';
-                }
-                
-                // Verificar si és passat
-                if (dataActual < new Date(avui.getFullYear(), avui.getMonth(), avui.getDate())) {
-                    classe += ' passat';
-                }
-                
-                // Verificar si està ocupat
-                if (estaOcupat(dataActual)) {
-                    classe += ' ocupat';
-                    diesOcupats++;
-                }
-                
-                // Verificar si està seleccionat
-                if (dataIniciSeleccionada && dataActual.getTime() === dataIniciSeleccionada.getTime()) {
-                    classe += ' seleccionat';
-                } else if (dataFiSeleccionada && dataActual.getTime() === dataFiSeleccionada.getTime()) {
-                    classe += ' seleccionat';
-                }
-                
-                html += `<div class="${classe}" data-data="${dataActual.toISOString().split('T')[0]}">${dia}</div>`;
-            }
-            
-            calendariDiv.innerHTML = html;
-            
-            // Afegir event listeners als dies disponibles
-            calendariDiv.querySelectorAll('.dia:not(.buit):not(.passat):not(.ocupat)').forEach(dia => {
-                dia.addEventListener('click', function() {
-                    const dataString = this.getAttribute('data-data');
-                    seleccionarDataCalendari(dataString);
-                });
-            });
-            
-            console.log('✅ Calendari generat per', immobleSeleccionat + '. Dies ocupats:', diesOcupats);
+        // Generar calendari visual (començant per Dilluns) - Versió millorada
+function generarCalendari() {
+    console.log('📆 Generant calendari per:', immobleSeleccionat);
+    const calendariDiv = document.getElementById('calendari');
+    const mesDisplay = document.getElementById('mes-actual');
+    
+    // Actualitzar display del mes
+    const nomsMesos = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 
+                      'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
+    mesDisplay.textContent = `${nomsMesos[mesActual]} ${anyActual}`;
+    
+    // Obtenir primer i últim dia del mes
+    const primerDia = new Date(anyActual, mesActual, 1);
+    const ultimDia = new Date(anyActual, mesActual + 1, 0);
+    const avui = new Date();
+    
+    let html = '';
+    let diesOcupats = 0;
+    
+    // AJUST: Començar per Dilluns (Dilluns = 1, Diumenge = 0)
+    let diaIniciSetmana = primerDia.getDay();
+    if (diaIniciSetmana === 0) {
+        diaIniciSetmana = 6;
+    } else {
+        diaIniciSetmana = diaIniciSetmana - 1;
+    }
+    
+    // Afegir dies buits abans del primer dia
+    for (let i = 0; i < diaIniciSetmana; i++) {
+        html += '<div class="dia buit"></div>';
+    }
+    
+    // Afegir dies del mes
+    for (let dia = 1; dia <= ultimDia.getDate(); dia++) {
+        const dataActual = new Date(anyActual, mesActual, dia);
+        let classe = 'dia';
+        
+        // Verificar si és avui
+        if (dataActual.toDateString() === avui.toDateString()) {
+            classe += ' avui';
         }
+        
+        // Verificar si és passat
+        if (dataActual < new Date(avui.getFullYear(), avui.getMonth(), avui.getDate())) {
+            classe += ' passat';
+        }
+        
+        // Verificar si està ocupat
+        if (estaOcupat(dataActual)) {
+            classe += ' ocupat';
+            diesOcupats++;
+        }
+        
+        // Verificar si està seleccionat (mantenir les seleccions existents)
+        if (dataIniciSeleccionada && dataActual.getTime() === dataIniciSeleccionada.getTime()) {
+            classe += ' seleccionat';
+        } else if (dataFiSeleccionada && dataActual.getTime() === dataFiSeleccionada.getTime()) {
+            classe += ' seleccionat';
+        }
+        
+        html += `<div class="${classe}" data-data="${dataActual.toISOString().split('T')[0]}">${dia}</div>`;
+    }
+    
+    calendariDiv.innerHTML = html;
+    
+    // Afegir event listeners als dies disponibles
+    calendariDiv.querySelectorAll('.dia:not(.buit):not(.passat):not(.ocupat)').forEach(dia => {
+        dia.addEventListener('click', function() {
+            const dataString = this.getAttribute('data-data');
+            seleccionarDataCalendari(dataString);
+        });
+    });
+    
+    console.log('✅ Calendari generat per', immobleSeleccionat + '. Dies ocupats:', diesOcupats);
+}
         
         // Canviar mes al calendari
         function canviarMes(direccio) {
@@ -1781,30 +1849,49 @@ async function obtenirPreuImmoble() {
         }
         
         // Seleccionar data des del calendari
-        function seleccionarDataCalendari(dataString) {
-            const data = new Date(dataString);
-            
-            if (!dataIniciSeleccionada || (dataIniciSeleccionada && dataFiSeleccionada)) {
-                // Nova selecció
-                dataIniciSeleccionada = data;
-                dataFiSeleccionada = null;
-                document.getElementById('data-inici').value = formatDataInput(data);
-                document.getElementById('data-fi').value = '';
-            } else if (data > dataIniciSeleccionada) {
-                // Completar selecció
-                dataFiSeleccionada = data;
-                document.getElementById('data-fi').value = formatDataInput(data);
-                verificarDisponibilitat();
-            } else {
-                // Data anterior, començar de nou
-                dataIniciSeleccionada = data;
-                dataFiSeleccionada = null;
-                document.getElementById('data-inici').value = formatDataInput(data);
-                document.getElementById('data-fi').value = '';
-            }
-            
-            generarCalendari();
-        }
+        // Seleccionar data des del calendari - Versió millorada
+function seleccionarDataCalendari(dataString) {
+    const data = new Date(dataString);
+    
+    // Verificar si la data està ocupada abans de seleccionar
+    if (estaOcupat(data)) {
+        mostrarMissatge(
+            document.getElementById('missatge-disponibilitat'),
+            '❌ Aquesta data ja no està disponible. Si us plau, selecciona una altra data.',
+            'error'
+        );
+        return;
+    }
+    
+    if (!dataIniciSeleccionada || (dataIniciSeleccionada && dataFiSeleccionada)) {
+        // Nova selecció
+        dataIniciSeleccionada = data;
+        dataFiSeleccionada = null;
+        document.getElementById('data-inici').value = formatDataInput(data);
+        document.getElementById('data-fi').value = '';
+        
+        // Amagar formulari si estava visible
+        amagarFormulariReserva();
+        amagarBotoContinuar();
+    } else if (data > dataIniciSeleccionada) {
+        // Completar selecció
+        dataFiSeleccionada = data;
+        document.getElementById('data-fi').value = formatDataInput(data);
+        verificarDisponibilitat();
+    } else {
+        // Data anterior, començar de nou
+        dataIniciSeleccionada = data;
+        dataFiSeleccionada = null;
+        document.getElementById('data-inici').value = formatDataInput(data);
+        document.getElementById('data-fi').value = '';
+        
+        // Amagar formulari si estava visible
+        amagarFormulariReserva();
+        amagarBotoContinuar();
+    }
+    
+    generarCalendari();
+}
         
         // Verificar disponibilitat
         async function verificarDisponibilitat() {
@@ -2021,6 +2108,7 @@ function tancarModal() {
 </body>
 
 </html>
+
 
 
 
