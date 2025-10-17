@@ -1562,23 +1562,34 @@ function obtenirRespostaPerDefecte(accio, parametres) {
             });
         }
         
-        // Iniciar actualització automàtica cada 20 segons
-        function iniciarActualitzacioAutomatica() {
-            console.log('⏰ Iniciant actualització automàtica cada 20 segons');
-            
-            // Carregar dates immediatament
+        // Iniciar actualització automàtica cada 20 segons (VERSIÓ MILLORADA)
+function iniciarActualitzacioAutomatica() {
+    console.log('⏰ Iniciant actualització automàtica cada 20 segons');
+    
+    // Carregar dates immediatament
+    carregarDatesOcupades();
+    
+    // Configurar interval cada 20 segons
+    intervalActualitzacio = setInterval(function() {
+        comptadorActualitzacio++;
+        console.log(`🔄 Actualització automàtica #${comptadorActualitzacio} per ${immobleSeleccionat}`);
+        
+        // Verificar si hi ha formulari visible
+        const formulariVisible = document.getElementById('resum-reserva').style.display !== 'none';
+        
+        if (formulariVisible) {
+            console.log('📋 Formulari actiu - Actualització discreta');
+            // Actualització discreta que no interromp l'usuari
+            carregarDatesOcupadesDiscreta();
+        } else {
+            // Actualització normal
             carregarDatesOcupades();
-            
-            // Configurar interval cada 20 segons
-            intervalActualitzacio = setInterval(function() {
-                comptadorActualitzacio++;
-                console.log(`🔄 Actualització automàtica #${comptadorActualitzacio} per ${immobleSeleccionat}`);
-                carregarDatesOcupades();
-            }, 20000); // 20 segons
-            
-            // Actualitzar el comptador visual cada segon
-            setInterval(actualitzarComptadorVisual, 1000);
         }
+    }, 20000); // 20 segons
+    
+    // Actualitzar el comptador visual cada segon
+    setInterval(actualitzarComptadorVisual, 1000);
+}
         
         // Actualitzar el comptador visual
         function actualitzarComptadorVisual() {
@@ -2099,6 +2110,7 @@ function tancarModal() {
 </body>
 
 </html>
+
 
 
 
