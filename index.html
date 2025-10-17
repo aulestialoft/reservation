@@ -1519,7 +1519,7 @@ async function carregarDatesOcupades() {
         
         console.log('📥 Resposta JSONP completa:', resultat);
         
-        // ✅ CORRECCIÓ COMPLETA: Verificar diferents formats de resposta
+        // ✅ CORRECCIÓ: Verificar diferents formats de resposta
         let datesArray = [];
         
         if (Array.isArray(resultat)) {
@@ -1530,12 +1530,8 @@ async function carregarDatesOcupades() {
             // Cas 2: És un objecte amb propietat dates
             datesArray = resultat.dates;
             console.log('✅ Format: Objecte amb propietat dates');
-        } else if (resultat && resultat.dates === undefined) {
-            // Cas 3: És un objecte buit o sense propietat dates
-            datesArray = [];
-            console.log('✅ Format: Objecte sense dates');
         } else {
-            // Cas 4: Qualsevol altra cosa
+            // Cas 3: Qualsevol altra cosa
             datesArray = [];
             console.log('✅ Format: Desconegut, utilitzant array buit');
         }
@@ -1568,7 +1564,6 @@ async function carregarDatesOcupades() {
         generarCalendari();
     }
 }
-        // Obtenir preu de l'immoble
 // Obtenir preu de l'immoble
 async function obtenirPreuImmoble() {
     try {
@@ -1923,6 +1918,7 @@ async function obtenirPreuImmoble() {
 </body>
 
 </html>
+
 
 
 
