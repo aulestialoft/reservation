@@ -1508,6 +1508,7 @@ function obtenirRespostaPerDefecte(accio, parametres) {
         }
         
    // Carregar dates ocupades del Google Sheets (versió GitHub Pages)
+// Carregar dates ocupades del Google Sheets (versió GitHub Pages)
 async function carregarDatesOcupades() {
     console.log('📅 Carregant dates ocupades per:', immobleSeleccionat);
     document.getElementById('text-estat-calendari').textContent = 'Carregant dates ocupades...';
@@ -1517,13 +1518,26 @@ async function carregarDatesOcupades() {
             immoble: immobleSeleccionat
         });
         
-        console.log('✅ Dates ocupades carregades per', immobleSeleccionat + ':', resultat.dates.length, 'dates');
-        datesOcupades = resultat.dates;
+        // ✅ CORRECCIÓ: Verificar si és un array directe o un objecte amb propietat dates
+        let datesArray;
+        if (Array.isArray(resultat)) {
+            // Si és un array directe (com està passant)
+            datesArray = resultat;
+        } else if (resultat && Array.isArray(resultat.dates)) {
+            // Si és un objecte amb propietat dates
+            datesArray = resultat.dates;
+        } else {
+            // Si no hi ha dades vàlides
+            datesArray = [];
+        }
+        
+        console.log('✅ Dates ocupades carregades per', immobleSeleccionat + ':', datesArray.length, 'dates');
+        datesOcupades = datesArray;
         
         const dataActual = new Date();
         const horaActualitzacio = dataActual.toLocaleTimeString('ca-ES');
         document.getElementById('text-estat-calendari').innerHTML = 
-            `✅ ${resultat.dates.length} dates ocupades per ${immobleSeleccionat} - Actualitzat: ${horaActualitzacio}`;
+            `✅ ${datesArray.length} dates ocupades per ${immobleSeleccionat} - Actualitzat: ${horaActualitzacio}`;
         
         generarCalendari();
         
@@ -1875,6 +1889,7 @@ async function carregarDatesOcupades() {
 </body>
 
 </html>
+
 
 
 
