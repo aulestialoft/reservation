@@ -765,8 +765,89 @@
                 text-align: center;
             }
         }
+        /* Finestra modal de confirmació */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+    animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+    from { opacity: 0; transform: translateY(-50px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.modal-title {
+    font-size: 1.8rem;
+    color: #27ae60;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.modal-message {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #7f8c8d;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.modal-close:hover {
+    background: #f8f9fa;
+    color: #2c3e50;
+}
     </style>
 </head>
+    <!-- Finestra modal de confirmació de reserva -->
+<div id="modal-reserva" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="tancarModal()">×</button>
+        <div class="modal-icon">✅</div>
+        <h2 class="modal-title">Reserva Rebuda</h2>
+        <p class="modal-message">En breu ens posarem en contacte per confirmar la reserva</p>
+    </div>
+</div>
 <body>
     <div class="container">
         <header>
@@ -1878,16 +1959,16 @@ async function obtenirPreuImmoble() {
             dades: dadesReserva
         });
         
-        if (resultat.exit) {
-            mostrarMissatge(missatgeDiv, resultat.missatge, 'exit');
-            setTimeout(() => {
-                document.getElementById('nom').value = '';
-                document.getElementById('email').value = '';
-                document.getElementById('telefon').value = '';
-                netejarSeleccions();
-                amagarFormulariReserva();
-                carregarDatesOcupades();
-            }, 3000);
+       if (resultat.exit) {
+    mostrarModalReserva();
+    setTimeout(() => {
+        document.getElementById('nom').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('telefon').value = '';
+        netejarSeleccions();
+        amagarFormulariReserva();
+        carregarDatesOcupades();
+    }, 3000);
         } else {
             mostrarMissatge(missatgeDiv, resultat.missatge, 'error');
         }
@@ -1914,10 +1995,33 @@ async function obtenirPreuImmoble() {
             element.className = `missatge ${tipus}`;
             element.style.display = 'block';
         }
+        // Funció per mostrar la finestra modal de confirmació
+function mostrarModalReserva() {
+    const modal = document.getElementById('modal-reserva');
+    modal.style.display = 'block';
+    
+    // Tancar modal en fer clic fora del contingut
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            tancarModal();
+        }
+    });
+    
+    // Prevenir que el clic dins del contingut tanqui el modal
+    document.querySelector('.modal-content').addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+}
+
+// Funció per tancar la finestra modal
+function tancarModal() {
+    document.getElementById('modal-reserva').style.display = 'none';
+}
     </script>
 </body>
 
 </html>
+
 
 
 
