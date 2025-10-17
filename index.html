@@ -765,89 +765,221 @@
                 text-align: center;
             }
         }
+
         /* Finestra modal de confirmació */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 10000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    backdrop-filter: blur(5px);
-}
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
 
-.modal-content {
-    background-color: white;
-    margin: 15% auto;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-    position: relative;
-    animation: modalAppear 0.3s ease-out;
-}
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            animation: modalAppear 0.3s ease-out;
+        }
 
-@keyframes modalAppear {
-    from { opacity: 0; transform: translateY(-50px) scale(0.9); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
+        @keyframes modalAppear {
+            from { opacity: 0; transform: translateY(-50px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-.modal-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-}
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
 
-.modal-title {
-    font-size: 1.8rem;
-    color: #27ae60;
-    margin-bottom: 1rem;
-    font-weight: bold;
-}
+        .modal-title {
+            font-size: 1.8rem;
+            color: #27ae60;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
 
-.modal-message {
-    font-size: 1.2rem;
-    color: #2c3e50;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-}
+        .modal-message {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
 
-.modal-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #7f8c8d;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-}
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
 
-.modal-close:hover {
-    background: #f8f9fa;
-    color: #2c3e50;
-}
+        .modal-close:hover {
+            background: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        /* Calendaris compactes permanents */
+        .calendari-compacte-container {
+            margin-top: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1rem;
+            background: #f8f9fa;
+        }
+
+        .calendari-compacte {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .calendari-compacte .calendari-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding: 0;
+        }
+
+        .calendari-compacte .calendari-mes {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .calendari-compacte .btn-nav {
+            background: #3498db;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendari-compacte .btn-nav:hover {
+            background: #2980b9;
+        }
+
+        .calendari-compacte .dies-setmana {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 5px;
+            text-align: center;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 0.8rem;
+        }
+
+        .calendari-compacte .dia-setmana {
+            padding: 5px 2px;
+            font-size: 0.75rem;
+        }
+
+        .calendari-compacte .dies-mes {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .calendari-compacte .dia {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            background: white;
+            min-height: 25px;
+        }
+
+        .calendari-compacte .dia:hover {
+            background: #3498db;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .calendari-compacte .dia.buit {
+            background: transparent;
+            cursor: default;
+        }
+
+        .calendari-compacte .dia.buit:hover {
+            transform: none;
+            background: transparent;
+        }
+
+        .calendari-compacte .dia.passat {
+            background: #f8f9fa;
+            color: #adb5bd;
+            cursor: not-allowed;
+        }
+
+        .calendari-compacte .dia.passat:hover {
+            background: #f8f9fa;
+            color: #adb5bd;
+            transform: none;
+        }
+
+        .calendari-compacte .dia.avui {
+            background: #3498db;
+            color: white;
+            border-color: #2c3e50;
+        }
+
+        .calendari-compacte .dia.ocupat {
+            background: #e74c3c;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .calendari-compacte .dia.ocupat:hover {
+            background: #e74c3c;
+            transform: none;
+        }
+
+        .calendari-compacte .dia.seleccionat {
+            background: #27ae60;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        /* Amagar els calendaris de selecció flotants antics */
+        .calendari-seleccio {
+            display: none !important;
+        }
     </style>
 </head>
-    <!-- Finestra modal de confirmació de reserva -->
-<div id="modal-reserva" class="modal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="tancarModal()">×</button>
-        <div class="modal-icon">✅</div>
-        <h2 class="modal-title">Reserva Rebuda</h2>
-        <p class="modal-message">En breu ens posarem en contacte per confirmar la reserva</p>
-    </div>
-</div>
 <body>
     <div class="container">
         <header>
@@ -968,7 +1100,7 @@
             </div>
         </section>
 
-        <!-- Secció de Reserves (el sistema que ja teníem) -->
+        <!-- Secció de Reserves (VERSIÓ MILLORADA AMB CALENDARIS COMPACTES) -->
         <section id="reserves" class="section">
             <h2 class="section-title">Fes la Teva Reserva</h2>
             
@@ -983,7 +1115,7 @@
                     </div>
                 </div>
                 
-                <!-- Secció de Dates -->
+                <!-- Secció de Dates (VERSIÓ MILLORADA) -->
                 <div class="seccio-dates">
                     <h3 style="margin-bottom: 1rem; color: #2c3e50;">📅 Selecciona les teves dates</h3>
                     
@@ -992,7 +1124,10 @@
                             <label class="form-label" for="data-inici">Data d'entrada</label>
                             <div class="data-input-wrapper">
                                 <input type="text" id="data-inici" class="form-input" readonly placeholder="Clica per seleccionar data">
-                                <div id="calendari-inici" class="calendari-seleccio" style="display: none;"></div>
+                            </div>
+                            <!-- Calendari compacte permanent per data d'entrada -->
+                            <div class="calendari-compacte-container">
+                                <div id="calendari-inici-permanent" class="calendari-compacte"></div>
                             </div>
                         </div>
                         
@@ -1000,7 +1135,10 @@
                             <label class="form-label" for="data-fi">Data de sortida</label>
                             <div class="data-input-wrapper">
                                 <input type="text" id="data-fi" class="form-input" readonly placeholder="Clica per seleccionar data">
-                                <div id="calendari-fi" class="calendari-seleccio" style="display: none;"></div>
+                            </div>
+                            <!-- Calendari compacte permanent per data de sortida -->
+                            <div class="calendari-compacte-container">
+                                <div id="calendari-fi-permanent" class="calendari-compacte"></div>
                             </div>
                         </div>
                     </div>
@@ -1154,6 +1292,16 @@
         </footer>
     </div>
 
+    <!-- Finestra modal de confirmació de reserva -->
+    <div id="modal-reserva" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="tancarModal()">×</button>
+            <div class="modal-icon">✅</div>
+            <h2 class="modal-title">Reserva Rebuda</h2>
+            <p class="modal-message">En breu ens posarem en contacte per confirmar la reserva</p>
+        </div>
+    </div>
+
     <script>
         // Funcionalitat de navegació entre seccions
         function mostrarSeccio(seccioId) {
@@ -1176,6 +1324,7 @@
                 setTimeout(() => {
                     generarCalendari();
                     carregarDatesOcupades();
+                    inicialitzarCalendarisCompactes(); // ← NOU: Inicialitzar calendaris compactes
                 }, 100);
             }
         }
@@ -1193,234 +1342,146 @@
         let intervalActualitzacio = null;
         let comptadorActualitzacio = 0;
         
-        // Variables pels calendaris de selecció
-        let calendariIniciVisible = false;
-        let calendariFiVisible = false;
+        // Variables pels calendaris compactes
         let mesCalendariInici = new Date().getMonth();
         let anyCalendariInici = new Date().getFullYear();
         let mesCalendariFi = new Date().getMonth();
         let anyCalendariFi = new Date().getFullYear();
 
-  // Configuració - POSA LA TEVA URL DE GOOGLE APPS SCRIPT AQUÍ 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLdeqEBF-XWAWwojTUx9FaCiPC9Tn_YY42cvwSJPrEEOEB3Y--2X-tVSBVte_GS8SG/exec';
+        // Configuració - POSA LA TEVA URL DE GOOGLE APPS SCRIPT AQUÍ 
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLdeqEBF-XWAWwojTUx9FaCiPC9Tn_YY42cvwSJPrEEOEB3Y--2X-tVSBVte_GS8SG/exec';
 
-// Funció per fer peticions al Google Apps Script - VERSIÓ JSONP
-function ferPeticioGS(accio, parametres = {}) {
-    return new Promise((resolve) => {
-        // Crear un ID únic per a la callback
-        const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-        
-        // Crear l'script element
-        const script = document.createElement('script');
-        
-        // Construir la URL amb paràmetres GET
-        const url = new URL(SCRIPT_URL);
-        url.searchParams.append('action', accio);
-        url.searchParams.append('callback', callbackName);
-        
-        // Afegir altres paràmetres
-        Object.keys(parametres).forEach(key => {
-            if (typeof parametres[key] === 'object') {
-                url.searchParams.append(key, JSON.stringify(parametres[key]));
-            } else {
-                url.searchParams.append(key, parametres[key]);
-            }
-        });
-        
-        console.log(`📤 Fent petició JSONP a: ${accio}`, parametres);
-        
-        // Configurar la funció global de callback
-        window[callbackName] = function(data) {
-            console.log(`📥 Resposta JSONP de ${accio}:`, data);
-            
-            // Netejar
-            delete window[callbackName];
-            document.body.removeChild(script);
-            
-            resolve(data);
-        };
-        
-        // Manejar errors
-        script.onerror = function() {
-            console.error(`❌ Error JSONP en ${accio}`);
-            delete window[callbackName];
-            if (script.parentNode) {
-                document.body.removeChild(script);
-            }
-            resolve(obtenirRespostaPerDefecte(accio, parametres));
-        };
-        
-        // Afegir l'script al document
-        script.src = url.toString();
-        document.body.appendChild(script);
-        
-        // Timeout de seguretat (10 segons)
-        setTimeout(() => {
-            if (window[callbackName]) {
-                console.warn(`⏰ Timeout en ${accio}`);
-                delete window[callbackName];
-                if (script.parentNode) {
-                    document.body.removeChild(script);
-                }
-                resolve(obtenirRespostaPerDefecte(accio, parametres));
-            }
-        }, 10000);
-    });
-}
-
-// Funció auxiliar per respostes per defecte en cas d'error
-function obtenirRespostaPerDefecte(accio, parametres) {
-    const respostes = {
-        'obtenirDatesOcupades': { dates: [] },
-        'obtenirPreuImmoble': { 
-            preu: parametres.immoble === 'Loft Barcelona' ? 120 : 85 
-        },
-        'verificarDisponibilitat': { 
-            disponible: true,
-            missatge: '✅ Disponible' 
-        },
-        'ferReserva': { 
-            exit: false, 
-            missatge: 'Error de connexió. Torna a intentar-ho més tard.' 
-        }
-    };
-    
-    return respostes[accio] || { error: 'Acció no reconeguda' };
-}        
-        // Inicialització
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Inicialitzant sistema...');
-            
-            // Configurar selector d'immobles
-            document.querySelectorAll('.btn-immoble').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.btn-immoble').forEach(b => b.classList.remove('seleccionat'));
-                    this.classList.add('seleccionat');
-                    immobleSeleccionat = this.getAttribute('data-immoble');
-                    console.log('🏠 Immoble seleccionat:', immobleSeleccionat);
-                    
-                    // Netejar les dades anteriors
-                    datesOcupades = [];
-                    datesValides = false;
-                    dataIniciSeleccionada = null;
-                    dataFiSeleccionada = null;
-                    
-                    // Netejar els camps del formulari
-                    document.getElementById('data-inici').value = '';
-                    document.getElementById('data-fi').value = '';
-                    document.getElementById('nom').value = '';
-                    document.getElementById('email').value = '';
-                    document.getElementById('telefon').value = '';
-                    
-                    // Amagar calendaris de selecció
-                    amagarCalendarisSeleccio();
-                    
-                    // Amagar elements
-                    amagarBotoContinuar();
-                    amagarFormulariReserva();
-                    document.getElementById('missatge-disponibilitat').innerHTML = '';
-                    document.getElementById('missatge-reserva').innerHTML = '';
-                    
-                    // Carregar les dades del nou immoble
-                    obtenirPreuImmoble();
-                    carregarDatesOcupades();
-                    generarCalendari();
+        // Funció per fer peticions al Google Apps Script - VERSIÓ JSONP
+        function ferPeticioGS(accio, parametres = {}) {
+            return new Promise((resolve) => {
+                // Crear un ID únic per a la callback
+                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+                
+                // Crear l'script element
+                const script = document.createElement('script');
+                
+                // Construir la URL amb paràmetres GET
+                const url = new URL(SCRIPT_URL);
+                url.searchParams.append('action', accio);
+                url.searchParams.append('callback', callbackName);
+                
+                // Afegir altres paràmetres
+                Object.keys(parametres).forEach(key => {
+                    if (typeof parametres[key] === 'object') {
+                        url.searchParams.append(key, JSON.stringify(parametres[key]));
+                    } else {
+                        url.searchParams.append(key, parametres[key]);
+                    }
                 });
-            });
-            
-            // Configurar events pels calendaris de selecció
-            document.getElementById('data-inici').addEventListener('click', function(e) {
-                e.stopPropagation();
-                toggleCalendariInici();
-            });
-            
-            document.getElementById('data-fi').addEventListener('click', function(e) {
-                e.stopPropagation();
-                if (!dataIniciSeleccionada) {
-                    alert('Si us plau, selecciona primer la data d\'entrada');
-                    return;
-                }
-                toggleCalendariFi();
-            });
-            
-            // Tancar calendaris quan es faci clic fora (excepte als botons de navegació)
-            document.addEventListener('click', function(event) {
-                // Comprovar si el clic és fora dels calendaris i dels seus botons de navegació
-                const esBotoNav = event.target.classList.contains('btn-nav') || 
-                                  event.target.parentElement.classList.contains('btn-nav');
                 
-                const esDinsCalendari = event.target.closest('.calendari-seleccio') || 
-                                       event.target.closest('#data-inici') || 
-                                       event.target.closest('#data-fi');
+                console.log(`📤 Fent petició JSONP a: ${accio}`, parametres);
                 
-                if (!esDinsCalendari && !esBotoNav) {
-                    amagarCalendarisSeleccio();
-                }
+                // Configurar la funció global de callback
+                window[callbackName] = function(data) {
+                    console.log(`📥 Resposta JSONP de ${accio}:`, data);
+                    
+                    // Netejar
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    
+                    resolve(data);
+                };
+                
+                // Manejar errors
+                script.onerror = function() {
+                    console.error(`❌ Error JSONP en ${accio}`);
+                    delete window[callbackName];
+                    if (script.parentNode) {
+                        document.body.removeChild(script);
+                    }
+                    resolve(obtenirRespostaPerDefecte(accio, parametres));
+                };
+                
+                // Afegir l'script al document
+                script.src = url.toString();
+                document.body.appendChild(script);
+                
+                // Timeout de seguretat (10 segons)
+                setTimeout(() => {
+                    if (window[callbackName]) {
+                        console.warn(`⏰ Timeout en ${accio}`);
+                        delete window[callbackName];
+                        if (script.parentNode) {
+                            document.body.removeChild(script);
+                        }
+                        resolve(obtenirRespostaPerDefecte(accio, parametres));
+                    }
+                }, 10000);
             });
+        }
+
+        // Funció auxiliar per respostes per defecte en cas d'error
+        function obtenirRespostaPerDefecte(accio, parametres) {
+            const respostes = {
+                'obtenirDatesOcupades': { dates: [] },
+                'obtenirPreuImmoble': { 
+                    preu: parametres.immoble === 'Loft Barcelona' ? 120 : 85 
+                },
+                'verificarDisponibilitat': { 
+                    disponible: true,
+                    missatge: '✅ Disponible' 
+                },
+                'ferReserva': { 
+                    exit: false, 
+                    missatge: 'Error de connexió. Torna a intentar-ho més tard.' 
+                }
+            };
             
-            // Carregar dades inicials
-            obtenirPreuImmoble();
-            generarCalendari();
+            return respostes[accio] || { error: 'Acció no reconeguda' };
+        }        
+
+        // Inicialització dels calendaris compactes
+        function inicialitzarCalendarisCompactes() {
+            generarCalendariIniciPermanent();
+            generarCalendariFiPermanent();
+        }
+
+        // Generar calendari compacte permanent per data d'entrada
+        function generarCalendariIniciPermanent() {
+            const calendariDiv = document.getElementById('calendari-inici-permanent');
+            const avui = new Date();
+            const mes = avui.getMonth();
+            const any = avui.getFullYear();
             
-            // Iniciar actualització automàtica
-            iniciarActualitzacioAutomatica();
-        });
-        
-        // Funcions pels calendaris de selecció
-        function toggleCalendariInici() {
-            calendariIniciVisible = !calendariIniciVisible;
-            if (calendariIniciVisible) {
-                mostrarCalendariInici();
-                calendariFiVisible = false;
-                document.getElementById('calendari-fi').style.display = 'none';
-            } else {
-                document.getElementById('calendari-inici').style.display = 'none';
+            generarCalendariCompacte(calendariDiv, mes, any, 'inici-permanent');
+        }
+
+        // Generar calendari compacte permanent per data de sortida
+        function generarCalendariFiPermanent() {
+            const calendariDiv = document.getElementById('calendari-fi-permanent');
+            const avui = new Date();
+            let mes = avui.getMonth();
+            let any = avui.getFullYear();
+            
+            // Mostrar el mes següent per la data de sortida
+            mes += 1;
+            if (mes > 11) {
+                mes = 0;
+                any += 1;
             }
+            
+            generarCalendariCompacte(calendariDiv, mes, any, 'fi-permanent');
         }
-        
-        function toggleCalendariFi() {
-            calendariFiVisible = !calendariFiVisible;
-            if (calendariFiVisible) {
-                mostrarCalendariFi();
-                calendariIniciVisible = false;
-                document.getElementById('calendari-inici').style.display = 'none';
-            } else {
-                document.getElementById('calendari-fi').style.display = 'none';
-            }
-        }
-        
-        function amagarCalendarisSeleccio() {
-            calendariIniciVisible = false;
-            calendariFiVisible = false;
-            document.getElementById('calendari-inici').style.display = 'none';
-            document.getElementById('calendari-fi').style.display = 'none';
-        }
-        
-        function mostrarCalendariInici() {
-            const calendariDiv = document.getElementById('calendari-inici');
-            generarCalendariSeleccio(calendariDiv, mesCalendariInici, anyCalendariInici, 'inici');
-            calendariDiv.style.display = 'block';
-        }
-        
-        function mostrarCalendariFi() {
-            const calendariDiv = document.getElementById('calendari-fi');
-            generarCalendariSeleccio(calendariDiv, mesCalendariFi, anyCalendariFi, 'fi');
-            calendariDiv.style.display = 'block';
-        }
-        
-        function generarCalendariSeleccio(calendariDiv, mes, any, tipus) {
-            const nomsMesos = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 
-                              'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
+
+        // Funció principal per generar calendaris compactes
+        function generarCalendariCompacte(calendariDiv, mes, any, tipus) {
+            const nomsMesos = ['Gen', 'Feb', 'Mar', 'Abr', 'Maig', 'Jun', 
+                              'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'];
             
             const avui = new Date();
-            const dataMinima = tipus === 'fi' && dataIniciSeleccionada ? 
+            const dataMinima = tipus === 'fi-permanent' && dataIniciSeleccionada ? 
                 new Date(dataIniciSeleccionada.getTime() + 24 * 60 * 60 * 1000) : avui;
             
             let html = `
                 <div class="calendari-header">
-                    <button class="btn-nav" onclick="canviarMesSeleccio(-1, '${tipus}')">←</button>
+                    <button class="btn-nav" onclick="canviarMesCompacte(-1, '${tipus}')">←</button>
                     <div class="calendari-mes">${nomsMesos[mes]} ${any}</div>
-                    <button class="btn-nav" onclick="canviarMesSeleccio(1, '${tipus}')">→</button>
+                    <button class="btn-nav" onclick="canviarMesCompacte(1, '${tipus}')">→</button>
                 </div>
                 <div class="dies-setmana">
                     <div class="dia-setmana">Dl</div>
@@ -1438,7 +1499,7 @@ function obtenirRespostaPerDefecte(accio, parametres) {
             const primerDia = new Date(any, mes, 1);
             const ultimDia = new Date(any, mes + 1, 0);
             
-            // AJUST: Començar per Dilluns
+            // Començar per Dilluns
             let diaIniciSetmana = primerDia.getDay();
             if (diaIniciSetmana === 0) {
                 diaIniciSetmana = 6;
@@ -1469,7 +1530,7 @@ function obtenirRespostaPerDefecte(accio, parametres) {
                 }
                 
                 // Per data de sortida, verificar que sigui posterior a la data d'entrada
-                if (tipus === 'fi' && dataIniciSeleccionada) {
+                if (tipus === 'fi-permanent' && dataIniciSeleccionada) {
                     if (dataActual <= dataIniciSeleccionada) {
                         classe += ' passat';
                         disabled = true;
@@ -1483,113 +1544,218 @@ function obtenirRespostaPerDefecte(accio, parametres) {
                 }
                 
                 // Verificar si està seleccionat
-                if (tipus === 'inici' && dataIniciSeleccionada && dataActual.getTime() === dataIniciSeleccionada.getTime()) {
+                if (tipus === 'inici-permanent' && dataIniciSeleccionada && dataActual.getTime() === dataIniciSeleccionada.getTime()) {
                     classe += ' seleccionat';
-                } else if (tipus === 'fi' && dataFiSeleccionada && dataActual.getTime() === dataFiSeleccionada.getTime()) {
+                } else if (tipus === 'fi-permanent' && dataFiSeleccionada && dataActual.getTime() === dataFiSeleccionada.getTime()) {
                     classe += ' seleccionat';
                 }
                 
                 if (disabled) {
                     html += `<div class="${classe}">${dia}</div>`;
                 } else {
-                    html += `<div class="${classe}" onclick="seleccionarDataSeleccio('${dataActual.toISOString().split('T')[0]}', '${tipus}')">${dia}</div>`;
+                    html += `<div class="${classe}" onclick="seleccionarDataCompacte('${dataActual.toISOString().split('T')[0]}', '${tipus}')">${dia}</div>`;
                 }
             }
             
             html += '</div>';
             calendariDiv.innerHTML = html;
         }
-        
-        function canviarMesSeleccio(direccio, tipus) {
-            // Aturar la propagació per evitar que es tanqui el calendari
-            event.stopPropagation();
+
+        // Canviar mes als calendaris compactes
+        function canviarMesCompacte(direccio, tipus) {
+            let mes, any;
             
-            if (tipus === 'inici') {
-                mesCalendariInici += direccio;
-                if (mesCalendariInici < 0) {
-                    mesCalendariInici = 11;
-                    anyCalendariInici--;
-                } else if (mesCalendariInici > 11) {
-                    mesCalendariInici = 0;
-                    anyCalendariInici++;
-                }
-                mostrarCalendariInici();
+            if (tipus === 'inici-permanent') {
+                mes = mesCalendariInici;
+                any = anyCalendariInici;
             } else {
-                mesCalendariFi += direccio;
-                if (mesCalendariFi < 0) {
-                    mesCalendariFi = 11;
-                    anyCalendariFi--;
-                } else if (mesCalendariFi > 11) {
-                    mesCalendariFi = 0;
-                    anyCalendariFi++;
-                }
-                mostrarCalendariFi();
+                mes = mesCalendariFi;
+                any = anyCalendariFi;
+            }
+            
+            mes += direccio;
+            if (mes < 0) {
+                mes = 11;
+                any--;
+            } else if (mes > 11) {
+                mes = 0;
+                any++;
+            }
+            
+            if (tipus === 'inici-permanent') {
+                mesCalendariInici = mes;
+                anyCalendariInici = any;
+                generarCalendariIniciPermanent();
+            } else {
+                mesCalendariFi = mes;
+                anyCalendariFi = any;
+                generarCalendariFiPermanent();
             }
         }
-        
-        function seleccionarDataSeleccio(dataString, tipus) {
+
+        // Seleccionar data des dels calendaris compactes
+        function seleccionarDataCompacte(dataString, tipus) {
             const data = new Date(dataString);
             
-            if (tipus === 'inici') {
+            if (tipus === 'inici-permanent') {
+                // Verificar disponibilitat per data d'inici
+                if (estaOcupat(data)) {
+                    mostrarMissatge(
+                        document.getElementById('missatge-disponibilitat'),
+                        '❌ Aquesta data no està disponible. Si us plau, selecciona una altra data.',
+                        'error'
+                    );
+                    return;
+                }
+                
                 dataIniciSeleccionada = data;
                 document.getElementById('data-inici').value = formatDataInput(data);
-                amagarCalendarisSeleccio();
                 
-                // Si ja hi ha una data de sortida anterior a la nova data d'inici, netejar-la
+                // Si ja hi ha una data de sortida anterior, netejar-la
                 if (dataFiSeleccionada && dataFiSeleccionada <= data) {
                     dataFiSeleccionada = null;
                     document.getElementById('data-fi').value = '';
+                    generarCalendariFiPermanent(); // Actualitzar calendari de sortida
                 }
+                
+                // Amagar formulari si estava visible
+                amagarFormulariReserva();
+                amagarBotoContinuar();
+                
             } else {
-                // Assegurar que la data de sortida sigui posterior a la d'entrada
-                if (dataIniciSeleccionada && data > dataIniciSeleccionada) {
-                    dataFiSeleccionada = data;
-                    document.getElementById('data-fi').value = formatDataInput(data);
-                    amagarCalendarisSeleccio();
-                } else {
-                    alert('La data de sortida ha de ser posterior a la data d\'entrada');
+                // Verificar que hi hagi data d'entrada seleccionada
+                if (!dataIniciSeleccionada) {
+                    mostrarMissatge(
+                        document.getElementById('missatge-disponibilitat'),
+                        '⚠️ Si us plau, selecciona primer la data d\'entrada',
+                        'error'
+                    );
+                    return;
                 }
+                
+                // Verificar que la data de sortida sigui posterior
+                if (data <= dataIniciSeleccionada) {
+                    mostrarMissatge(
+                        document.getElementById('missatge-disponibilitat'),
+                        '❌ La data de sortida ha de ser posterior a la data d\'entrada',
+                        'error'
+                    );
+                    return;
+                }
+                
+                // Verificar disponibilitat de tot el rang
+                const dataTemp = new Date(dataIniciSeleccionada);
+                let totDisponible = true;
+                
+                while (dataTemp < data) {
+                    if (estaOcupat(dataTemp)) {
+                        totDisponible = false;
+                        break;
+                    }
+                    dataTemp.setDate(dataTemp.getDate() + 1);
+                }
+                
+                if (!totDisponible) {
+                    mostrarMissatge(
+                        document.getElementById('missatge-disponibilitat'),
+                        '❌ Algunes dates dins d\'aquest rang no estan disponibles',
+                        'error'
+                    );
+                    return;
+                }
+                
+                dataFiSeleccionada = data;
+                document.getElementById('data-fi').value = formatDataInput(data);
             }
             
-            generarCalendari();
+            // Actualitzar ambdós calendaris
+            generarCalendariIniciPermanent();
+            generarCalendariFiPermanent();
+            
+            // Si tenim ambdues dates, verificar disponibilitat
+            if (dataIniciSeleccionada && dataFiSeleccionada) {
+                setTimeout(() => {
+                    verificarDisponibilitat();
+                }, 100);
+            }
         }
-        
-        function formatDataInput(data) {
-            return data.toLocaleDateString('ca-ES', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
+
+        // Inicialització
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicialitzant sistema...');
+            
+            // Configurar selector d'immobles
+            document.querySelectorAll('.btn-immoble').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.btn-immoble').forEach(b => b.classList.remove('seleccionat'));
+                    this.classList.add('seleccionat');
+                    immobleSeleccionat = this.getAttribute('data-immoble');
+                    console.log('🏠 Immoble seleccionat:', immobleSeleccionat);
+                    
+                    // Netejar les dades anteriors
+                    datesOcupades = [];
+                    datesValides = false;
+                    dataIniciSeleccionada = null;
+                    dataFiSeleccionada = null;
+                    
+                    // Netejar els camps del formulari
+                    document.getElementById('data-inici').value = '';
+                    document.getElementById('data-fi').value = '';
+                    document.getElementById('nom').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('telefon').value = '';
+                    
+                    // Amagar elements
+                    amagarBotoContinuar();
+                    amagarFormulariReserva();
+                    document.getElementById('missatge-disponibilitat').innerHTML = '';
+                    document.getElementById('missatge-reserva').innerHTML = '';
+                    
+                    // Carregar les dades del nou immoble
+                    obtenirPreuImmoble();
+                    carregarDatesOcupades();
+                    generarCalendari();
+                    inicialitzarCalendarisCompactes(); // ← NOU: Reinicialitzar calendaris compactes
+                });
             });
-        }
-        
+            
+            // Carregar dades inicials
+            obtenirPreuImmoble();
+            generarCalendari();
+            inicialitzarCalendarisCompactes(); // ← NOU: Inicialitzar calendaris compactes
+            
+            // Iniciar actualització automàtica
+            iniciarActualitzacioAutomatica();
+        });
+
         // Iniciar actualització automàtica cada 20 segons (VERSIÓ MILLORADA)
-function iniciarActualitzacioAutomatica() {
-    console.log('⏰ Iniciant actualització automàtica cada 20 segons');
-    
-    // Carregar dates immediatament
-    carregarDatesOcupades();
-    
-    // Configurar interval cada 20 segons
-    intervalActualitzacio = setInterval(function() {
-        comptadorActualitzacio++;
-        console.log(`🔄 Actualització automàtica #${comptadorActualitzacio} per ${immobleSeleccionat}`);
-        
-        // Verificar si hi ha formulari visible
-        const formulariVisible = document.getElementById('resum-reserva').style.display !== 'none';
-        
-        if (formulariVisible) {
-            console.log('📋 Formulari actiu - Actualització discreta');
-            // Actualització discreta que no interromp l'usuari
-            carregarDatesOcupadesDiscreta();
-        } else {
-            // Actualització normal
+        function iniciarActualitzacioAutomatica() {
+            console.log('⏰ Iniciant actualització automàtica cada 20 segons');
+            
+            // Carregar dates immediatament
             carregarDatesOcupades();
+            
+            // Configurar interval cada 20 segons
+            intervalActualitzacio = setInterval(function() {
+                comptadorActualitzacio++;
+                console.log(`🔄 Actualització automàtica #${comptadorActualitzacio} per ${immobleSeleccionat}`);
+                
+                // Verificar si hi ha formulari visible
+                const formulariVisible = document.getElementById('resum-reserva').style.display !== 'none';
+                
+                if (formulariVisible) {
+                    console.log('📋 Formulari actiu - Actualització discreta');
+                    // Actualització discreta que no interromp l'usuari
+                    carregarDatesOcupadesDiscreta();
+                } else {
+                    // Actualització normal
+                    carregarDatesOcupades();
+                }
+            }, 20000); // 20 segons
+            
+            // Actualitzar el comptador visual cada segon
+            setInterval(actualitzarComptadorVisual, 1000);
         }
-    }, 20000); // 20 segons
-    
-    // Actualitzar el comptador visual cada segon
-    setInterval(actualitzarComptadorVisual, 1000);
-}
         
         // Actualitzar el comptador visual
         function actualitzarComptadorVisual() {
@@ -1599,157 +1765,190 @@ function iniciarActualitzacioAutomatica() {
                 `Dates actualitzades automàticament - Propera actualització en ${segonsRestants}s`;
         }
         
-// Carregar dates ocupades del Google Sheets (VERSIÓ CORREGIDA)
-async function carregarDatesOcupades() {
-    console.log('📅 Carregant dates ocupades per:', immobleSeleccionat);
-    
-    // NO modificar l'estat del calendari durant la càrrega
-    // document.getElementById('text-estat-calendari').textContent = 'Carregant dates ocupades...';
-    
-    try {
-        const resultat = await ferPeticioGS('obtenirDatesOcupades', {
-            immoble: immobleSeleccionat
-        });
-        
-        console.log('📥 Resposta JSONP completa:', resultat);
-        
-        // ✅ CORRECCIÓ: Verificar diferents formats de resposta
-        let datesArray = [];
-        
-        if (Array.isArray(resultat)) {
-            datesArray = resultat;
-        } else if (resultat && Array.isArray(resultat.dates)) {
-            datesArray = resultat.dates;
-        } else {
-            datesArray = [];
+        // Carregar dates ocupades del Google Sheets (VERSIÓ CORREGIDA)
+        async function carregarDatesOcupades() {
+            console.log('📅 Carregant dates ocupades per:', immobleSeleccionat);
+            
+            try {
+                const resultat = await ferPeticioGS('obtenirDatesOcupades', {
+                    immoble: immobleSeleccionat
+                });
+                
+                console.log('📥 Resposta JSONP completa:', resultat);
+                
+                // ✅ CORRECCIÓ: Verificar diferents formats de resposta
+                let datesArray = [];
+                
+                if (Array.isArray(resultat)) {
+                    datesArray = resultat;
+                } else if (resultat && Array.isArray(resultat.dates)) {
+                    datesArray = resultat.dates;
+                } else {
+                    datesArray = [];
+                }
+                
+                console.log('✅ Dates ocupades carregades per', immobleSeleccionat + ':', datesArray.length, 'dates');
+                
+                // Actualitzar les dates ocupades
+                datesOcupades = datesArray;
+                
+                const dataActual = new Date();
+                const horaActualitzacio = dataActual.toLocaleTimeString('ca-ES');
+                document.getElementById('text-estat-calendari').innerHTML = 
+                    `✅ ${datesArray.length} dates ocupades per ${immobleSeleccionat} - Actualitzat: ${horaActualitzacio}`;
+                
+                // SOLAMENTE generar calendari si NO hi ha formulari visible
+                const formulariVisible = document.getElementById('resum-reserva').style.display !== 'none';
+                
+                if (!formulariVisible) {
+                    generarCalendari();
+                } else {
+                    console.log('📋 Formulari visible - No es regenera el calendari per no interrompre');
+                }
+                
+                // Si hi ha formulari visible, verificar discretament si les dates segueixen disponibles
+                if (formulariVisible && dataIniciSeleccionada && dataFiSeleccionada) {
+                    verificarDisponibilitatSilenciosa();
+                }
+                
+            } catch (error) {
+                console.error('❌ Error carregant dates ocupades per', immobleSeleccionat + ':', error);
+                datesOcupades = [];
+                document.getElementById('text-estat-calendari').textContent = 
+                    `❌ Error carregant dates ocupades per ${immobleSeleccionat}`;
+                
+                // Només regenerar calendari si no hi ha formulari visible
+                const formulariVisible = document.getElementById('resum-reserva').style.display !== 'none';
+                if (!formulariVisible) {
+                    generarCalendari();
+                }
+            }
         }
-        
-        console.log('✅ Dates ocupades carregades per', immobleSeleccionat + ':', datesArray.length, 'dates');
-        
-        // Actualitzar les dates ocupades
-        datesOcupades = datesArray;
-        
-        const dataActual = new Date();
-        const horaActualitzacio = dataActual.toLocaleTimeString('ca-ES');
-        document.getElementById('text-estat-calendari').innerHTML = 
-            `✅ ${datesArray.length} dates ocupades per ${immobleSeleccionat} - Actualitzat: ${horaActualitzacio}`;
-        
-        // SOLAMENTE generar calendari si NO hi ha formulari visible
-        const formulariVisible = document.getElementById('resum-reserva').style.display !== 'none';
-        
-        if (!formulariVisible) {
-            generarCalendari();
-        } else {
-            console.log('📋 Formulari visible - No es regenera el calendari per no interrompre');
-        }
-        
-        // Si hi ha formulari visible, verificar discretament si les dates segueixen disponibles
-        if (formulariVisible && dataIniciSeleccionada && dataFiSeleccionada) {
-            verificarDisponibilitatSilenciosa();
-        }
-        
-    } catch (error) {
-        console.error('❌ Error carregant dates ocupades per', immobleSeleccionat + ':', error);
-        datesOcupades = [];
-        document.getElementById('text-estat-calendari').textContent = 
-            `❌ Error carregant dates ocupades per ${immobleSeleccionat}`;
-        
-        // Només regenerar calendari si no hi ha formulari visible
-        const formulariVisible = document.getElementById('resum-reserva').style.display !== 'none';
-        if (!formulariVisible) {
-            generarCalendari();
-        }
-    }
-}
-// Verificació silenciosa de disponibilitat (sense interrompre l'usuari)
-function verificarDisponibilitatSilenciosa() {
-    if (!dataIniciSeleccionada || !dataFiSeleccionada) return;
-    
-    const dataActual = new Date(dataIniciSeleccionada);
-    let totesDisponibles = true;
-    
-    // Verificar totes les dates del rang
-    while (dataActual < dataFiSeleccionada) {
-        if (estaOcupat(dataActual)) {
-            totesDisponibles = false;
-            break;
-        }
-        dataActual.setDate(dataActual.getDate() + 1);
-    }
-    
-    if (!totesDisponibles) {
-        console.log('⚠️ Les dates seleccionades ja no estan disponibles');
-        // Aquí pots afegir un indicador visual discret si vols
-        // Per exemple, canviar el color del botó de reserva
-        document.getElementById('btn-reservar').style.background = '#e74c3c';
-        document.getElementById('btn-reservar').title = 'Les dates ja no estan disponibles - Si us plau, selecciona unes dates diferents';
-    } else {
-        // Restaurar estat normal
-        document.getElementById('btn-reservar').style.background = '';
-        document.getElementById('btn-reservar').title = '';
-    }
-}        
-// Funció per verificar si les dates seleccionades segueixen disponibles després de l'actualització
-function verificarDisponibilitatContinuada(dataInici, dataFi) {
-    // Crear un array amb totes les dates del rang seleccionat
-    const datesEnRang = [];
-    const dataActual = new Date(dataInici);
-    
-    while (dataActual < dataFi) {
-        datesEnRang.push(dataActual.toISOString().split('T')[0]);
-        dataActual.setDate(dataActual.getDate() + 1);
-    }
-    
-    // Verificar si alguna d'aquestes dates està ocupada
-    for (const data of datesEnRang) {
-        if (datesOcupades.includes(data)) {
-            console.log(`❌ Data ocupada trobada: ${data}`);
-            return false;
-        }
-    }
-    
-    console.log('✅ Totes les dates del rang segueixen disponibles');
-    return true;
-}
 
-        
-// Obtenir preu de l'immoble
-async function obtenirPreuImmoble() {
-    try {
-        const resultat = await ferPeticioGS('obtenirPreuImmoble', {
-            immoble: immobleSeleccionat
-        });
-        
-        console.log('📥 Resposta preu:', resultat);
-        
-        // ✅ CORRECCIÓ COMPLETA: Verificar diferents formats de resposta
-        if (typeof resultat === 'number') {
-            // Cas 1: És un número directe
-            preuPerNit = resultat;
-            console.log('✅ Format preu: Número directe');
-        } else if (resultat && typeof resultat.preu === 'number') {
-            // Cas 2: És un objecte amb propietat preu
-            preuPerNit = resultat.preu;
-            console.log('✅ Format preu: Objecte amb preu');
-        } else if (resultat && resultat.preu === undefined) {
-            // Cas 3: Valor per defecte
-            preuPerNit = immobleSeleccionat === 'Loft Barcelona' ? 120 : 85;
-            console.log('✅ Format preu: Objecte sense preu, utilitzant valor per defecte');
-        } else {
-            // Cas 4: Qualsevol altra cosa
-            preuPerNit = immobleSeleccionat === 'Loft Barcelona' ? 120 : 85;
-            console.log('✅ Format preu: Desconegut, utilitzant valor per defecte');
+        // Versió discreta de carregarDatesOcupades() per quan hi ha formulari actiu
+        async function carregarDatesOcupadesDiscreta() {
+            try {
+                const resultat = await ferPeticioGS('obtenirDatesOcupades', {
+                    immoble: immobleSeleccionat
+                });
+                
+                let datesArray = [];
+                
+                if (Array.isArray(resultat)) {
+                    datesArray = resultat;
+                } else if (resultat && Array.isArray(resultat.dates)) {
+                    datesArray = resultat.dates;
+                }
+                
+                // Actualitzar les dates ocupades sense interrompre
+                datesOcupades = datesArray;
+                
+                // Actualització silenciosa de l'estat
+                const dataActual = new Date();
+                const horaActualitzacio = dataActual.toLocaleTimeString('ca-ES');
+                document.getElementById('text-estat-calendari').innerHTML = 
+                    `✅ ${datesArray.length} dates ocupades - Actualitzat: ${horaActualitzacio}`;
+                
+                // Verificació silenciosa de les dates seleccionades
+                if (dataIniciSeleccionada && dataFiSeleccionada) {
+                    verificarDisponibilitatSilenciosa();
+                }
+                
+            } catch (error) {
+                console.error('❌ Error en actualització discreta:', error);
+                // No fer res en mode discret per no interrompre l'usuari
+            }
         }
-        
-        document.getElementById('resum-preu-nit').textContent = preuPerNit + ' €';
-        console.log('✅ Preu final:', preuPerNit);
-        
-    } catch (error) {
-        console.error('Error obtenint preu:', error);
-        preuPerNit = immobleSeleccionat === 'Loft Barcelona' ? 120 : 85;
-        document.getElementById('resum-preu-nit').textContent = preuPerNit + ' €';
-    }
-}
+
+        // Verificació silenciosa de disponibilitat (sense interrompre l'usuari)
+        function verificarDisponibilitatSilenciosa() {
+            if (!dataIniciSeleccionada || !dataFiSeleccionada) return;
+            
+            const dataActual = new Date(dataIniciSeleccionada);
+            let totesDisponibles = true;
+            
+            // Verificar totes les dates del rang
+            while (dataActual < dataFiSeleccionada) {
+                if (estaOcupat(dataActual)) {
+                    totesDisponibles = false;
+                    break;
+                }
+                dataActual.setDate(dataActual.getDate() + 1);
+            }
+            
+            if (!totesDisponibles) {
+                console.log('⚠️ Les dates seleccionades ja no estan disponibles');
+                // Aquí pots afegir un indicador visual discret si vols
+                // Per exemple, canviar el color del botó de reserva
+                document.getElementById('btn-reservar').style.background = '#e74c3c';
+                document.getElementById('btn-reservar').title = 'Les dates ja no estan disponibles - Si us plau, selecciona unes dates diferents';
+            } else {
+                // Restaurar estat normal
+                document.getElementById('btn-reservar').style.background = '';
+                document.getElementById('btn-reservar').title = '';
+            }
+        }
+
+        // Funció per verificar si les dates seleccionades segueixen disponibles després de l'actualització
+        function verificarDisponibilitatContinuada(dataInici, dataFi) {
+            // Crear un array amb totes les dates del rang seleccionat
+            const datesEnRang = [];
+            const dataActual = new Date(dataInici);
+            
+            while (dataActual < dataFi) {
+                datesEnRang.push(dataActual.toISOString().split('T')[0]);
+                dataActual.setDate(dataActual.getDate() + 1);
+            }
+            
+            // Verificar si alguna d'aquestes dates està ocupada
+            for (const data of datesEnRang) {
+                if (datesOcupades.includes(data)) {
+                    console.log(`❌ Data ocupada trobada: ${data}`);
+                    return false;
+                }
+            }
+            
+            console.log('✅ Totes les dates del rang segueixen disponibles');
+            return true;
+        }
+
+        // Obtenir preu de l'immoble
+        async function obtenirPreuImmoble() {
+            try {
+                const resultat = await ferPeticioGS('obtenirPreuImmoble', {
+                    immoble: immobleSeleccionat
+                });
+                
+                console.log('📥 Resposta preu:', resultat);
+                
+                // ✅ CORRECCIÓ COMPLETA: Verificar diferents formats de resposta
+                if (typeof resultat === 'number') {
+                    // Cas 1: És un número directe
+                    preuPerNit = resultat;
+                    console.log('✅ Format preu: Número directe');
+                } else if (resultat && typeof resultat.preu === 'number') {
+                    // Cas 2: És un objecte amb propietat preu
+                    preuPerNit = resultat.preu;
+                    console.log('✅ Format preu: Objecte amb preu');
+                } else if (resultat && resultat.preu === undefined) {
+                    // Cas 3: Valor per defecte
+                    preuPerNit = immobleSeleccionat === 'Loft Barcelona' ? 120 : 85;
+                    console.log('✅ Format preu: Objecte sense preu, utilitzant valor per defecte');
+                } else {
+                    // Cas 4: Qualsevol altra cosa
+                    preuPerNit = immobleSeleccionat === 'Loft Barcelona' ? 120 : 85;
+                    console.log('✅ Format preu: Desconegut, utilitzant valor per defecte');
+                }
+                
+                document.getElementById('resum-preu-nit').textContent = preuPerNit + ' €';
+                console.log('✅ Preu final:', preuPerNit);
+                
+            } catch (error) {
+                console.error('Error obtenint preu:', error);
+                preuPerNit = immobleSeleccionat === 'Loft Barcelona' ? 120 : 85;
+                document.getElementById('resum-preu-nit').textContent = preuPerNit + ' €';
+            }
+        }
         
         // Funció per comprovar si una data està ocupada
         function estaOcupat(data) {
@@ -1757,83 +1956,82 @@ async function obtenirPreuImmoble() {
             return datesOcupades.includes(dataString);
         }
         
-        // Generar calendari visual (començant per Dilluns) - Versió millorada
-// Generar calendari visual (VERSIÓ MILLORADA)
-function generarCalendari(preservarSeleccions = true) {
-    console.log('📆 Generant calendari per:', immobleSeleccionat, 'Preservant seleccions:', preservarSeleccions);
-    
-    const calendariDiv = document.getElementById('calendari');
-    const mesDisplay = document.getElementById('mes-actual');
-    
-    // Actualitzar display del mes
-    const nomsMesos = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 
-                      'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
-    mesDisplay.textContent = `${nomsMesos[mesActual]} ${anyActual}`;
-    
-    // Obtenir primer i últim dia del mes
-    const primerDia = new Date(anyActual, mesActual, 1);
-    const ultimDia = new Date(anyActual, mesActual + 1, 0);
-    const avui = new Date();
-    
-    let html = '';
-    let diesOcupats = 0;
-    
-    // AJUST: Començar per Dilluns
-    let diaIniciSetmana = primerDia.getDay();
-    if (diaIniciSetmana === 0) {
-        diaIniciSetmana = 6;
-    } else {
-        diaIniciSetmana = diaIniciSetmana - 1;
-    }
-    
-    // Afegir dies buits abans del primer dia
-    for (let i = 0; i < diaIniciSetmana; i++) {
-        html += '<div class="dia buit"></div>';
-    }
-    
-    // Afegir dies del mes
-    for (let dia = 1; dia <= ultimDia.getDate(); dia++) {
-        const dataActual = new Date(anyActual, mesActual, dia);
-        let classe = 'dia';
-        
-        // Verificar si és avui
-        if (dataActual.toDateString() === avui.toDateString()) {
-            classe += ' avui';
+        // Generar calendari visual (VERSIÓ MILLORADA)
+        function generarCalendari(preservarSeleccions = true) {
+            console.log('📆 Generant calendari per:', immobleSeleccionat, 'Preservant seleccions:', preservarSeleccions);
+            
+            const calendariDiv = document.getElementById('calendari');
+            const mesDisplay = document.getElementById('mes-actual');
+            
+            // Actualitzar display del mes
+            const nomsMesos = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 
+                              'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
+            mesDisplay.textContent = `${nomsMesos[mesActual]} ${anyActual}`;
+            
+            // Obtenir primer i últim dia del mes
+            const primerDia = new Date(anyActual, mesActual, 1);
+            const ultimDia = new Date(anyActual, mesActual + 1, 0);
+            const avui = new Date();
+            
+            let html = '';
+            let diesOcupats = 0;
+            
+            // AJUST: Començar per Dilluns
+            let diaIniciSetmana = primerDia.getDay();
+            if (diaIniciSetmana === 0) {
+                diaIniciSetmana = 6;
+            } else {
+                diaIniciSetmana = diaIniciSetmana - 1;
+            }
+            
+            // Afegir dies buits abans del primer dia
+            for (let i = 0; i < diaIniciSetmana; i++) {
+                html += '<div class="dia buit"></div>';
+            }
+            
+            // Afegir dies del mes
+            for (let dia = 1; dia <= ultimDia.getDate(); dia++) {
+                const dataActual = new Date(anyActual, mesActual, dia);
+                let classe = 'dia';
+                
+                // Verificar si és avui
+                if (dataActual.toDateString() === avui.toDateString()) {
+                    classe += ' avui';
+                }
+                
+                // Verificar si és passat
+                if (dataActual < new Date(avui.getFullYear(), avui.getMonth(), avui.getDate())) {
+                    classe += ' passat';
+                }
+                
+                // Verificar si està ocupat
+                if (estaOcupat(dataActual)) {
+                    classe += ' ocupat';
+                    diesOcupats++;
+                }
+                
+                // Verificar si està seleccionat (SOLAMENTE si preservarSeleccions és true)
+                if (preservarSeleccions && dataIniciSeleccionada && dataActual.getTime() === dataIniciSeleccionada.getTime()) {
+                    classe += ' seleccionat';
+                } else if (preservarSeleccions && dataFiSeleccionada && dataActual.getTime() === dataFiSeleccionada.getTime()) {
+                    classe += ' seleccionat';
+                }
+                
+                html += `<div class="${classe}" data-data="${dataActual.toISOString().split('T')[0]}">${dia}</div>`;
+            }
+            
+            calendariDiv.innerHTML = html;
+            
+            // Afegir event listeners als dies disponibles
+            calendariDiv.querySelectorAll('.dia:not(.buit):not(.passat):not(.ocupat)').forEach(dia => {
+                dia.addEventListener('click', function() {
+                    const dataString = this.getAttribute('data-data');
+                    seleccionarDataCalendari(dataString);
+                });
+            });
+            
+            console.log('✅ Calendari generat per', immobleSeleccionat + '. Dies ocupats:', diesOcupats);
         }
-        
-        // Verificar si és passat
-        if (dataActual < new Date(avui.getFullYear(), avui.getMonth(), avui.getDate())) {
-            classe += ' passat';
-        }
-        
-        // Verificar si està ocupat
-        if (estaOcupat(dataActual)) {
-            classe += ' ocupat';
-            diesOcupats++;
-        }
-        
-        // Verificar si està seleccionat (SOLAMENTE si preservarSeleccions és true)
-        if (preservarSeleccions && dataIniciSeleccionada && dataActual.getTime() === dataIniciSeleccionada.getTime()) {
-            classe += ' seleccionat';
-        } else if (preservarSeleccions && dataFiSeleccionada && dataActual.getTime() === dataFiSeleccionada.getTime()) {
-            classe += ' seleccionat';
-        }
-        
-        html += `<div class="${classe}" data-data="${dataActual.toISOString().split('T')[0]}">${dia}</div>`;
-    }
-    
-    calendariDiv.innerHTML = html;
-    
-    // Afegir event listeners als dies disponibles
-    calendariDiv.querySelectorAll('.dia:not(.buit):not(.passat):not(.ocupat)').forEach(dia => {
-        dia.addEventListener('click', function() {
-            const dataString = this.getAttribute('data-data');
-            seleccionarDataCalendari(dataString);
-        });
-    });
-    
-    console.log('✅ Calendari generat per', immobleSeleccionat + '. Dies ocupats:', diesOcupats);
-}
         
         // Canviar mes al calendari
         function canviarMes(direccio) {
@@ -1850,99 +2048,109 @@ function generarCalendari(preservarSeleccions = true) {
             generarCalendari();
         }
         
-        // Seleccionar data des del calendari
         // Seleccionar data des del calendari - Versió millorada
-function seleccionarDataCalendari(dataString) {
-    const data = new Date(dataString);
-    
-    // Verificar si la data està ocupada abans de seleccionar
-    if (estaOcupat(data)) {
-        mostrarMissatge(
-            document.getElementById('missatge-disponibilitat'),
-            '❌ Aquesta data ja no està disponible. Si us plau, selecciona una altra data.',
-            'error'
-        );
-        return;
-    }
-    
-    if (!dataIniciSeleccionada || (dataIniciSeleccionada && dataFiSeleccionada)) {
-        // Nova selecció
-        dataIniciSeleccionada = data;
-        dataFiSeleccionada = null;
-        document.getElementById('data-inici').value = formatDataInput(data);
-        document.getElementById('data-fi').value = '';
+        function seleccionarDataCalendari(dataString) {
+            const data = new Date(dataString);
+            
+            // Verificar si la data està ocupada abans de seleccionar
+            if (estaOcupat(data)) {
+                mostrarMissatge(
+                    document.getElementById('missatge-disponibilitat'),
+                    '❌ Aquesta data ja no està disponible. Si us plau, selecciona una altra data.',
+                    'error'
+                );
+                return;
+            }
+            
+            if (!dataIniciSeleccionada || (dataIniciSeleccionada && dataFiSeleccionada)) {
+                // Nova selecció
+                dataIniciSeleccionada = data;
+                dataFiSeleccionada = null;
+                document.getElementById('data-inici').value = formatDataInput(data);
+                document.getElementById('data-fi').value = '';
+                
+                // Amagar formulari si estava visible
+                amagarFormulariReserva();
+                amagarBotoContinuar();
+            } else if (data > dataIniciSeleccionada) {
+                // Completar selecció
+                dataFiSeleccionada = data;
+                document.getElementById('data-fi').value = formatDataInput(data);
+                verificarDisponibilitat();
+            } else {
+                // Data anterior, començar de nou
+                dataIniciSeleccionada = data;
+                dataFiSeleccionada = null;
+                document.getElementById('data-inici').value = formatDataInput(data);
+                document.getElementById('data-fi').value = '';
+                
+                // Amagar formulari si estava visible
+                amagarFormulariReserva();
+                amagarBotoContinuar();
+            }
+            
+            generarCalendari();
+            // Actualitzar també els calendaris compactes
+            generarCalendariIniciPermanent();
+            generarCalendariFiPermanent();
+        }
         
-        // Amagar formulari si estava visible
-        amagarFormulariReserva();
-        amagarBotoContinuar();
-    } else if (data > dataIniciSeleccionada) {
-        // Completar selecció
-        dataFiSeleccionada = data;
-        document.getElementById('data-fi').value = formatDataInput(data);
-        verificarDisponibilitat();
-    } else {
-        // Data anterior, començar de nou
-        dataIniciSeleccionada = data;
-        dataFiSeleccionada = null;
-        document.getElementById('data-inici').value = formatDataInput(data);
-        document.getElementById('data-fi').value = '';
-        
-        // Amagar formulari si estava visible
-        amagarFormulariReserva();
-        amagarBotoContinuar();
-    }
-    
-    generarCalendari();
-}
+        function formatDataInput(data) {
+            return data.toLocaleDateString('ca-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
         
         // Verificar disponibilitat
         async function verificarDisponibilitat() {
-    const dataInici = document.getElementById('data-inici').value;
-    const dataFi = document.getElementById('data-fi').value;
-    const missatgeDiv = document.getElementById('missatge-disponibilitat');
-    
-    if (!dataInici || !dataFi) {
-        mostrarMissatge(missatgeDiv, 'Si us plau, selecciona tant la data d\'entrada com la de sortida', 'error');
-        return;
-    }
-    
-    if (dataFi <= dataInici) {
-        mostrarMissatge(missatgeDiv, 'La data de sortida ha de ser posterior a la data d\'entrada', 'error');
-        return;
-    }
-    
-    dataIniciSeleccionada = new Date(dataInici.split('/').reverse().join('-'));
-    dataFiSeleccionada = new Date(dataFi.split('/').reverse().join('-'));
-    
-    mostrarMissatge(missatgeDiv, '🔍 Verificant disponibilitat...', 'exit');
-    
-    try {
-        const resultat = await ferPeticioGS('verificarDisponibilitat', {
-            immoble: immobleSeleccionat,
-            data_inici: dataIniciSeleccionada.toISOString().split('T')[0],
-            data_fi: dataFiSeleccionada.toISOString().split('T')[0]
-        });
-        
-        if (resultat.disponible) {
-            datesValides = true;
-            mostrarMissatge(missatgeDiv, resultat.missatge, 'exit');
-            mostrarBotoContinuar();
-            amagarFormulariReserva();
-        } else {
-            datesValides = false;
-            mostrarMissatge(missatgeDiv, resultat.missatge, 'error');
-            amagarBotoContinuar();
-            amagarFormulariReserva();
+            const dataInici = document.getElementById('data-inici').value;
+            const dataFi = document.getElementById('data-fi').value;
+            const missatgeDiv = document.getElementById('missatge-disponibilitat');
+            
+            if (!dataInici || !dataFi) {
+                mostrarMissatge(missatgeDiv, 'Si us plau, selecciona tant la data d\'entrada com la de sortida', 'error');
+                return;
+            }
+            
+            if (dataFi <= dataInici) {
+                mostrarMissatge(missatgeDiv, 'La data de sortida ha de ser posterior a la data d\'entrada', 'error');
+                return;
+            }
+            
+            dataIniciSeleccionada = new Date(dataInici.split('/').reverse().join('-'));
+            dataFiSeleccionada = new Date(dataFi.split('/').reverse().join('-'));
+            
+            mostrarMissatge(missatgeDiv, '🔍 Verificant disponibilitat...', 'exit');
+            
+            try {
+                const resultat = await ferPeticioGS('verificarDisponibilitat', {
+                    immoble: immobleSeleccionat,
+                    data_inici: dataIniciSeleccionada.toISOString().split('T')[0],
+                    data_fi: dataFiSeleccionada.toISOString().split('T')[0]
+                });
+                
+                if (resultat.disponible) {
+                    datesValides = true;
+                    mostrarMissatge(missatgeDiv, resultat.missatge, 'exit');
+                    mostrarBotoContinuar();
+                    amagarFormulariReserva();
+                } else {
+                    datesValides = false;
+                    mostrarMissatge(missatgeDiv, resultat.missatge, 'error');
+                    amagarBotoContinuar();
+                    amagarFormulariReserva();
+                }
+            } catch (error) {
+                datesValides = false;
+                mostrarMissatge(missatgeDiv, 'Error verificant disponibilitat', 'error');
+                amagarBotoContinuar();
+                amagarFormulariReserva();
+            }
+            
+            generarCalendari();
         }
-    } catch (error) {
-        datesValides = false;
-        mostrarMissatge(missatgeDiv, 'Error verificant disponibilitat', 'error');
-        amagarBotoContinuar();
-        amagarFormulariReserva();
-    }
-    
-    generarCalendari();
-}
         
         // Mostrar botó "Continuar amb la Reserva"
         function mostrarBotoContinuar() {
@@ -1995,79 +2203,83 @@ function seleccionarDataCalendari(dataString) {
         function amagarFormulariReserva() {
             document.getElementById('resum-reserva').style.display = 'none';
         }
+
         function netejarSeleccions() {
-    datesOcupades = [];
-    datesValides = false;
-    dataIniciSeleccionada = null;
-    dataFiSeleccionada = null;
-    
-    document.getElementById('data-inici').value = '';
-    document.getElementById('data-fi').value = '';
-    document.getElementById('nom').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('telefon').value = '';
-    
-    amagarBotoContinuar();
-    amagarFormulariReserva();
-    document.getElementById('missatge-disponibilitat').innerHTML = '';
-    document.getElementById('missatge-reserva').innerHTML = '';
-}
+            datesOcupades = [];
+            datesValides = false;
+            dataIniciSeleccionada = null;
+            dataFiSeleccionada = null;
+            
+            document.getElementById('data-inici').value = '';
+            document.getElementById('data-fi').value = '';
+            document.getElementById('nom').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('telefon').value = '';
+            
+            amagarBotoContinuar();
+            amagarFormulariReserva();
+            document.getElementById('missatge-disponibilitat').innerHTML = '';
+            document.getElementById('missatge-reserva').innerHTML = '';
+            
+            // Reinicialitzar calendaris compactes
+            inicialitzarCalendarisCompactes();
+        }
         
         // Fer reserva
         async function ferReserva() {
-    const nom = document.getElementById('nom').value;
-    const email = document.getElementById('email').value;
-    const telefon = document.getElementById('telefon').value;
-    const missatgeDiv = document.getElementById('missatge-reserva');
-    const btnReservar = document.getElementById('btn-reservar');
-    
-    if (!nom || !email || !telefon) {
-        mostrarMissatge(missatgeDiv, 'Si us plau, completa tots els camps del formulari', 'error');
-        return;
-    }
-    
-    if (!datesValides) {
-        mostrarMissatge(missatgeDiv, 'Si us plau, verifica primer la disponibilitat de les dates', 'error');
-        return;
-    }
-    
-    const dadesReserva = {
-        nom: nom,
-        email: email,
-        telefon: telefon,
-        immoble: immobleSeleccionat,
-        data_inici: dataIniciSeleccionada.toISOString().split('T')[0],
-        data_fi: dataFiSeleccionada.toISOString().split('T')[0]
-    };
-    
-    btnReservar.disabled = true;
-    btnReservar.textContent = '🔄 Processant...';
-    
-    try {
-        const resultat = await ferPeticioGS('ferReserva', {
-            dades: dadesReserva
-        });
-        
-       if (resultat.exit) {
-    mostrarModalReserva();
-    setTimeout(() => {
-        document.getElementById('nom').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('telefon').value = '';
-        netejarSeleccions();
-        amagarFormulariReserva();
-        carregarDatesOcupades();
-    }, 3000);
-        } else {
-            mostrarMissatge(missatgeDiv, resultat.missatge, 'error');
+            const nom = document.getElementById('nom').value;
+            const email = document.getElementById('email').value;
+            const telefon = document.getElementById('telefon').value;
+            const missatgeDiv = document.getElementById('missatge-reserva');
+            const btnReservar = document.getElementById('btn-reservar');
+            
+            if (!nom || !email || !telefon) {
+                mostrarMissatge(missatgeDiv, 'Si us plau, completa tots els camps del formulari', 'error');
+                return;
+            }
+            
+            if (!datesValides) {
+                mostrarMissatge(missatgeDiv, 'Si us plau, verifica primer la disponibilitat de les dates', 'error');
+                return;
+            }
+            
+            const dadesReserva = {
+                nom: nom,
+                email: email,
+                telefon: telefon,
+                immoble: immobleSeleccionat,
+                data_inici: dataIniciSeleccionada.toISOString().split('T')[0],
+                data_fi: dataFiSeleccionada.toISOString().split('T')[0]
+            };
+            
+            btnReservar.disabled = true;
+            btnReservar.textContent = '🔄 Processant...';
+            
+            try {
+                const resultat = await ferPeticioGS('ferReserva', {
+                    dades: dadesReserva
+                });
+                
+                if (resultat.exit) {
+                    mostrarModalReserva();
+                    setTimeout(() => {
+                        document.getElementById('nom').value = '';
+                        document.getElementById('email').value = '';
+                        document.getElementById('telefon').value = '';
+                        netejarSeleccions();
+                        amagarFormulariReserva();
+                        carregarDatesOcupades();
+                    }, 3000);
+                } else {
+                    mostrarMissatge(missatgeDiv, resultat.missatge, 'error');
+                }
+            } catch (error) {
+                mostrarMissatge(missatgeDiv, 'Error en la reserva: ' + error.toString(), 'error');
+            }
+            
+            btnReservar.disabled = false;
+            btnReservar.textContent = '🚀 Fer Reserva';
         }
-    } catch (error) {
-        mostrarMissatge(missatgeDiv, 'Error en la reserva: ' + error.toString(), 'error');
-    }
-    
-    btnReservar.disabled = false;
-    btnReservar.textContent = '🚀 Fer Reserva';
-}
         
         // Funció auxiliar per formatar dates
         function formatData(data) {
@@ -2084,48 +2296,29 @@ function seleccionarDataCalendari(dataString) {
             element.className = `missatge ${tipus}`;
             element.style.display = 'block';
         }
-        // Funció per mostrar la finestra modal de confirmació
-function mostrarModalReserva() {
-    const modal = document.getElementById('modal-reserva');
-    modal.style.display = 'block';
-    
-    // Tancar modal en fer clic fora del contingut
-    modal.addEventListener('click', function(event) {
-        if (event.target === modal) {
-            tancarModal();
-        }
-    });
-    
-    // Prevenir que el clic dins del contingut tanqui el modal
-    document.querySelector('.modal-content').addEventListener('click', function(event) {
-        event.stopPropagation();
-    });
-}
 
-// Funció per tancar la finestra modal
-function tancarModal() {
-    document.getElementById('modal-reserva').style.display = 'none';
-}
+        // Funció per mostrar la finestra modal de confirmació
+        function mostrarModalReserva() {
+            const modal = document.getElementById('modal-reserva');
+            modal.style.display = 'block';
+            
+            // Tancar modal en fer clic fora del contingut
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    tancarModal();
+                }
+            });
+            
+            // Prevenir que el clic dins del contingut tanqui el modal
+            document.querySelector('.modal-content').addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        }
+
+        // Funció per tancar la finestra modal
+        function tancarModal() {
+            document.getElementById('modal-reserva').style.display = 'none';
+        }
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
