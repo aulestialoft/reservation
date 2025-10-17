@@ -1507,7 +1507,6 @@ function obtenirRespostaPerDefecte(accio, parametres) {
                 `Dates actualitzades automàticament - Propera actualització en ${segonsRestants}s`;
         }
         
-   // Carregar dates ocupades del Google Sheets (versió GitHub Pages)
 // Carregar dates ocupades del Google Sheets (versió GitHub Pages)
 async function carregarDatesOcupades() {
     console.log('📅 Carregant dates ocupades per:', immobleSeleccionat);
@@ -1518,20 +1517,32 @@ async function carregarDatesOcupades() {
             immoble: immobleSeleccionat
         });
         
-        // ✅ CORRECCIÓ: Verificar si és un array directe o un objecte amb propietat dates
-        let datesArray;
+        console.log('📥 Resposta JSONP completa:', resultat);
+        
+        // ✅ CORRECCIÓ COMPLETA: Verificar diferents formats de resposta
+        let datesArray = [];
+        
         if (Array.isArray(resultat)) {
-            // Si és un array directe (com està passant)
+            // Cas 1: És un array directe (el que està passant)
             datesArray = resultat;
+            console.log('✅ Format: Array directe');
         } else if (resultat && Array.isArray(resultat.dates)) {
-            // Si és un objecte amb propietat dates
+            // Cas 2: És un objecte amb propietat dates
             datesArray = resultat.dates;
-        } else {
-            // Si no hi ha dades vàlides
+            console.log('✅ Format: Objecte amb propietat dates');
+        } else if (resultat && resultat.dates === undefined) {
+            // Cas 3: És un objecte buit o sense propietat dates
             datesArray = [];
+            console.log('✅ Format: Objecte sense dates');
+        } else {
+            // Cas 4: Qualsevol altra cosa
+            datesArray = [];
+            console.log('✅ Format: Desconegut, utilitzant array buit');
         }
         
         console.log('✅ Dates ocupades carregades per', immobleSeleccionat + ':', datesArray.length, 'dates');
+        console.log('✅ Dates específiques:', datesArray);
+        
         datesOcupades = datesArray;
         
         const dataActual = new Date();
@@ -1557,24 +1568,38 @@ async function carregarDatesOcupades() {
         generarCalendari();
     }
 }
-        
         // Obtenir preu de l'immoble
+// Obtenir preu de l'immoble
 async function obtenirPreuImmoble() {
     try {
         const resultat = await ferPeticioGS('obtenirPreuImmoble', {
             immoble: immobleSeleccionat
         });
         
-        // ✅ CORRECCIÓ: Verificar si és un número directe o un objecte amb propietat preu
+        console.log('📥 Resposta preu:', resultat);
+        
+        // ✅ CORRECCIÓ COMPLETA: Verificar diferents formats de resposta
         if (typeof resultat === 'number') {
+            // Cas 1: És un número directe
             preuPerNit = resultat;
+            console.log('✅ Format preu: Número directe');
         } else if (resultat && typeof resultat.preu === 'number') {
+            // Cas 2: És un objecte amb propietat preu
             preuPerNit = resultat.preu;
-        } else {
+            console.log('✅ Format preu: Objecte amb preu');
+        } else if (resultat && resultat.preu === undefined) {
+            // Cas 3: Valor per defecte
             preuPerNit = immobleSeleccionat === 'Loft Barcelona' ? 120 : 85;
+            console.log('✅ Format preu: Objecte sense preu, utilitzant valor per defecte');
+        } else {
+            // Cas 4: Qualsevol altra cosa
+            preuPerNit = immobleSeleccionat === 'Loft Barcelona' ? 120 : 85;
+            console.log('✅ Format preu: Desconegut, utilitzant valor per defecte');
         }
         
         document.getElementById('resum-preu-nit').textContent = preuPerNit + ' €';
+        console.log('✅ Preu final:', preuPerNit);
+        
     } catch (error) {
         console.error('Error obtenint preu:', error);
         preuPerNit = immobleSeleccionat === 'Loft Barcelona' ? 120 : 85;
@@ -1898,6 +1923,7 @@ async function obtenirPreuImmoble() {
 </body>
 
 </html>
+
 
 
 
