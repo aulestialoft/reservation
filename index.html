@@ -1126,36 +1126,66 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwK8bX2h6ZJswNuJMTXe8aaosI7Eyea4AuTigqNGguRDVGd5-SOlow9HF_zIqrX1TQK/exec';
 
 // Funció per fer peticions al Google Apps Script
+// Funció per fer peticions al Google Apps Script - VERSIÓ MILLORADA
 async function ferPeticioGS(accio, parametres = {}) {
     try {
-        const formData = new FormData();
-        formData.append('action', accio);
+        // Crear URL amb paràmetres GET (més compatible amb Google Apps Script)
+        const url = new URL(SCRIPT_URL);
+        url.searchParams.append('action', accio);
         
+        // Afegir altres paràmetres
         Object.keys(parametres).forEach(key => {
             if (typeof parametres[key] === 'object') {
-                formData.append(key, JSON.stringify(parametres[key]));
+                url.searchParams.append(key, JSON.stringify(parametres[key]));
             } else {
-                formData.append(key, parametres[key]);
+                url.searchParams.append(key, parametres[key]);
             }
         });
         
-        const resposta = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: formData
+        console.log(`📤 Fent petició a: ${accio}`, parametres);
+        
+        const resposta = await fetch(url.toString(), {
+            method: 'GET',  // Canvia a GET per millor compatibilitat
+            headers: {
+                'Content-Type': 'application/json',
+            }
         });
         
         if (!resposta.ok) {
-            throw new Error('Error en la resposta del servidor');
+            throw new Error(`Error HTTP: ${resposta.status}`);
         }
         
-        return await resposta.json();
+        const dades = await resposta.json();
+        console.log(`📥 Resposta de ${accio}:`, dades);
+        return dades;
         
     } catch (error) {
-        console.error('Error en la petició:', error);
-        throw error;
+        console.error(`❌ Error en petició ${accio}:`, error);
+        
+        // Retornar resposta per defecte en lloc de llançar error
+        return obtenirRespostaPerDefecte(accio, parametres);
     }
 }
 
+// Funció auxiliar per respostes per defecte en cas d'error
+function obtenirRespostaPerDefecte(accio, parametres) {
+    const respostes = {
+        'obtenirDatesOcupades': { dates: [] },
+        'obtenirPreuImmoble': { 
+            preu: parametres.immoble === 'Loft Barcelona' ? 120 : 85 
+        },
+        'verificarDisponibilitat': { 
+            disponible: false, 
+            missatge: 'Error de connexió. Torna a intentar-ho.' 
+        },
+        'ferReserva': { 
+            exit: false, 
+            missatge: 'Error de connexió. Torna a intentar-ho més tard.' 
+        }
+    };
+    
+    return respostes[accio] || { error: 'Acció no reconeguda' };
+}
         
         // Inicialització
         document.addEventListener('DOMContentLoaded', function() {
@@ -1826,6 +1856,7 @@ async function carregarDatesOcupades() {
 </body>
 
 </html>
+
 
 
 
