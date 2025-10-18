@@ -1609,56 +1609,223 @@ function obtenirDadesRealsPerDefecte(accio, parametres) {
         // FUNCIONS ORIGINALS (MODIFICADES AMB DEBUG)
         // =============================================
 
-        // Carregar dates ocupades - VERSIÓ AMB DEBUG
-        async function carregarDatesOcupades() {
-            debugLog('🔍 Iniciant càrrega dates ocupades...');
-            debugLog('Immoble seleccionat: ' + immobleSeleccionat);
-            
-            try {
-                debugLog('📤 Fent petició a Google Apps Script...');
-                
-                const resultat = await ferPeticioGS('obtenirDatesOcupades', {
-                    immoble: immobleSeleccionat
-                });
-                
-                debugLog('📥 Resposta rebuda: ' + JSON.stringify(resultat).substring(0, 100));
-                
-                let datesArray = [];
-                
-                if (Array.isArray(resultat)) {
-                    datesArray = resultat;
-                    debugLog('✅ Format: Array directe - ' + datesArray.length + ' dates');
-                } else if (resultat && Array.isArray(resultat.dates)) {
-                    datesArray = resultat.dates;
-                    debugLog('✅ Format: Objecte amb dates - ' + datesArray.length + ' dates');
-                } else {
-                    datesArray = [];
-                    debugLog('❌ Format desconegut - Ús array buit');
-                }
-                
-                debugLog('📋 Dates específiques: ' + datesArray.join(', '));
-                
-                datesOcupades = datesArray;
-                
-                const dataActual = new Date();
-                const horaActualitzacio = dataActual.toLocaleTimeString('ca-ES');
-                document.getElementById('text-estat-calendari').innerHTML = 
-                    `✅ ${datesArray.length} dates ocupades - Actualitzat: ${horaActualitzacio}`;
-                
-                debugLog('🔄 Generant calendari...');
-                generarCalendari();
-                
-            } catch (error) {
-                debugLog('❌ ERROR: ' + error.toString());
-                debugLog('🔧 Iniciant mode offline...');
-                
-                datesOcupades = obtenirDatesOcupadesPerDefecte();
-                document.getElementById('text-estat-calendari').textContent = 
-                    '⚠️ Mode offline - Dades de prova';
-                
-                generarCalendari();
+        // Modifica la funció carregarDatesOcupades per actualitzar TOTS els calendaris
+async function carregarDatesOcupades() {
+    debugLog('🔍 Iniciant càrrega dates ocupades...');
+    debugLog('Immoble seleccionat: ' + immobleSeleccionat);
+    
+    try {
+        debugLog('📤 Fent petició a Google Apps Script...');
+        
+        const resultat = await ferPeticioGS('obtenirDatesOcupades', {
+            immoble: immobleSeleccionat
+        });
+        
+        debugLog('📥 Resposta rebuda: ' + JSON.stringify(resultat).substring(0, 100));
+        
+        let datesArray = [];
+        
+        if (Array.isArray(resultat)) {
+            datesArray = resultat;
+            debugLog('✅ Format: Array directe - ' + datesArray.length + ' dates');
+        } else if (resultat && Array.isArray(resultat.dates)) {
+            datesArray = resultat.dates;
+            debugLog('✅ Format: Objecte amb dates - ' + datesArray.length + ' dates');
+        } else {
+            datesArray = [];
+            debugLog('❌ Format desconegut - Ús array buit');
+        }
+        
+        debugLog('📋 Dates específiques: ' + datesArray.join(', '));
+        
+        datesOcupades = datesArray;
+        
+        const dataActual = new Date();
+        const horaActualitzacio = dataActual.toLocaleTimeString('ca-ES');
+        document.getElementById('text-estat-calendari').innerHTML = 
+            `✅ ${datesArray.length} dates ocupades - Actualitzat: ${horaActualitzacio}`;
+        
+        debugLog('🔄 Generant TOTS els calendaris...');
+        
+        // ACTUALITZAR TOTS ELS CALENDARIS
+        generarCalendari();
+        generarCalendariIniciPermanent();
+        generarCalendariFiPermanent();
+        
+    } catch (error) {
+        debugLog('❌ ERROR: ' + error.toString());
+        debugLog('🔧 Iniciant mode offline...');
+        
+        datesOcupades = obtenirDatesOcupadesPerDefecte();
+        document.getElementById('text-estat-calendari').textContent = 
+            '⚠️ Mode offline - Dades de prova';
+        
+        // ACTUALITZAR TOTS ELS CALENDARIS TAMBÉ EN MODE OFFLINE
+        generarCalendari();
+        generarCalendariIniciPermanent();
+        generarCalendariFiPermanent();
+    }
+}
+
+// Modifica la funció generarCalendariCompacte per aplicar les dates ocupades
+function generarCalendariCompacte(calendariDiv, mes, any, tipus) {
+    const nomsMesos = ['Gen', 'Feb', 'Mar', 'Abr', 'Maig', 'Jun', 
+                      'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'];
+    
+    const avui = new Date();
+    const dataMinima = tipus === 'fi-permanent' && dataIniciSeleccionada ? 
+        new Date(dataIniciSeleccionada.getTime() + 24 * 60 * 60 * 1000) : avui;
+    
+    let html = `
+        <div class="calendari-header">
+            <button class="btn-nav" onclick="canviarMesCompacte(-1, '${tipus}')">←</button>
+            <div class="calendari-mes">${nomsMesos[mes]} ${any}</div>
+            <button class="btn-nav" onclick="canviarMesCompacte(1, '${tipus}')">→</button>
+        </div>
+        <div class="dies-setmana">
+            <div class="dia-setmana">Dl</div>
+            <div class="dia-setmana">Dt</div>
+            <div class="dia-setmana">Dc</div>
+            <div class="dia-setmana">Dj</div>
+            <div class="dia-setmana">Dv</div>
+            <div class="dia-setmana">Ds</div>
+            <div class="dia-setmana">Dg</div>
+        </div>
+        <div class="dies-mes">
+    `;
+    
+    // Obtenir primer i últim dia del mes
+    const primerDia = new Date(any, mes, 1);
+    const ultimDia = new Date(any, mes + 1, 0);
+    
+    // Començar per Dilluns
+    let diaIniciSetmana = primerDia.getDay();
+    if (diaIniciSetmana === 0) {
+        diaIniciSetmana = 6;
+    } else {
+        diaIniciSetmana = diaIniciSetmana - 1;
+    }
+    
+    // Afegir dies buits abans del primer dia
+    for (let i = 0; i < diaIniciSetmana; i++) {
+        html += '<div class="dia buit"></div>';
+    }
+    
+    // Afegir dies del mes
+    for (let dia = 1; dia <= ultimDia.getDate(); dia++) {
+        const dataActual = new Date(any, mes, dia);
+        let classe = 'dia';
+        let disabled = false;
+        
+        // Verificar si és avui
+        if (dataActual.toDateString() === avui.toDateString()) {
+            classe += ' avui';
+        }
+        
+        // Verificar si és passat
+        if (dataActual < new Date(avui.getFullYear(), avui.getMonth(), avui.getDate())) {
+            classe += ' passat';
+            disabled = true;
+        }
+        
+        // Per data de sortida, verificar que sigui posterior a la data d'entrada
+        if (tipus === 'fi-permanent' && dataIniciSeleccionada) {
+            if (dataActual <= dataIniciSeleccionada) {
+                classe += ' passat';
+                disabled = true;
             }
         }
+        
+        // VERIFICAR SI ESTÀ OCUPAT (AQUESTA ÉS LA PART IMPORTANT)
+        if (estaOcupat(dataActual)) {
+            classe += ' ocupat';
+            disabled = true;
+            debugLog(`📅 Calendari ${tipus}: Data ${dataActual.toISOString().split('T')[0]} marcada com ocupada`);
+        }
+        
+        // Verificar si està seleccionat
+        if (tipus === 'inici-permanent' && dataIniciSeleccionada && dataActual.getTime() === dataIniciSeleccionada.getTime()) {
+            classe += ' seleccionat';
+        } else if (tipus === 'fi-permanent' && dataFiSeleccionada && dataActual.getTime() === dataFiSeleccionada.getTime()) {
+            classe += ' seleccionat';
+        }
+        
+        if (disabled) {
+            html += `<div class="${classe}">${dia}</div>`;
+        } else {
+            html += `<div class="${classe}" onclick="seleccionarDataCompacte('${dataActual.toISOString().split('T')[0]}', '${tipus}')">${dia}</div>`;
+        }
+    }
+    
+    html += '</div>';
+    calendariDiv.innerHTML = html;
+    
+    debugLog(`✅ Calendari compacte ${tipus} generat amb ${datesOcupades.length} dates ocupades`);
+}
+
+// Modifica la funció canviarMesCompacte per carregar les dates ocupades
+function canviarMesCompacte(direccio, tipus) {
+    let mes, any;
+    
+    if (tipus === 'inici-permanent') {
+        mes = mesCalendariInici;
+        any = anyCalendariInici;
+    } else {
+        mes = mesCalendariFi;
+        any = anyCalendariFi;
+    }
+    
+    mes += direccio;
+    if (mes < 0) {
+        mes = 11;
+        any--;
+    } else if (mes > 11) {
+        mes = 0;
+        any++;
+    }
+    
+    if (tipus === 'inici-permanent') {
+        mesCalendariInici = mes;
+        anyCalendariInici = any;
+        generarCalendariIniciPermanent();
+    } else {
+        mesCalendariFi = mes;
+        anyCalendariFi = any;
+        generarCalendariFiPermanent();
+    }
+    
+    // Assegurar-se que les dates ocupades estan carregades
+    if (datesOcupades.length === 0) {
+        carregarDatesOcupades();
+    }
+}
+
+// Afegeix aquesta funció per forçar l'actualització de tots els calendaris
+function actualitzarTotsElsCalendaris() {
+    debugLog('🔄 Actualitzant tots els calendaris...');
+    generarCalendari();
+    generarCalendariIniciPermanent();
+    generarCalendariFiPermanent();
+}
+
+// Modifica la funció de selecció d'immoble per actualitzar tots els calendaris
+document.querySelectorAll('.btn-immoble').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.btn-immoble').forEach(b => b.classList.remove('seleccionat'));
+        this.classList.add('seleccionat');
+        immobleSeleccionat = this.getAttribute('data-immoble');
+        debugLog('🏠 Immoble seleccionat: ' + immobleSeleccionat);
+        
+        netejarSeleccions();
+        obtenirPreuImmoble();
+        carregarDatesOcupades();
+        
+        // Utilitzar setTimeout per assegurar que les dates s'han carregat abans de generar calendaris
+        setTimeout(() => {
+            actualitzarTotsElsCalendaris();
+        }, 500);
+    });
+});
 
         // Dades de prova per a mode offline
         function obtenirDatesOcupadesPerDefecte() {
@@ -2506,6 +2673,7 @@ function obtenirDadesRealsPerDefecte(accio, parametres) {
 <!-- NO hi ha botó d'activació - totalment desactivat -->
 </body>
 </html>
+
 
 
 
