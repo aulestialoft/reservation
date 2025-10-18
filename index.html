@@ -1450,71 +1450,95 @@
             debugLog('✅ PROVA COMPLETADA');
         }
 
-        // Funció per fer peticions al Google Apps Script - VERSIÓ AMB DEBUG
-        function ferPeticioGS(accio, parametres = {}) {
-            return new Promise((resolve) => {
-                // Crear un ID únic per a la callback
-                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-                
-                // Crear l'script element
-                const script = document.createElement('script');
-                
-                // Construir la URL amb paràmetres GET
-                const url = new URL(SCRIPT_URL);
-                url.searchParams.append('action', accio);
-                url.searchParams.append('callback', callbackName);
-                
-                // Afegir altres paràmetres
-                Object.keys(parametres).forEach(key => {
-                    if (typeof parametres[key] === 'object') {
-                        url.searchParams.append(key, JSON.stringify(parametres[key]));
-                    } else {
-                        url.searchParams.append(key, parametres[key]);
-                    }
-                });
-                
-                debugLog(`📤 Fent petició JSONP a: ${accio}`);
-                debugLog(`🔗 URL: ${url.toString().substring(0, 100)}...`);
-                
-                // Configurar la funció global de callback
-                window[callbackName] = function(data) {
-                    debugLog(`📥 Resposta JSONP de ${accio}: ${JSON.stringify(data).substring(0, 100)}`);
-                    
-                    // Netejar
-                    delete window[callbackName];
+        // Funció per fer peticions al Google Apps Script - VERSIÓ MILLORADA
+async function ferPeticioGS(accio, parametres = {}) {
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLdeqEBF-XWAWwojTUx9FaCiPC9Tn_YY42cvwSJPrEEOEB3Y--2X-tVSBVte_GS8SG/exec';
+    
+    debugLog(`📤 Fent petició a: ${accio}`);
+    
+    try {
+        // Opció 1: Intentar amb CORS proxy
+        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+        const url = new URL(SCRIPT_URL);
+        url.searchParams.append('action', accio);
+        
+        // Afegir altres paràmetres
+        Object.keys(parametres).forEach(key => {
+            if (typeof parametres[key] === 'object') {
+                url.searchParams.append(key, JSON.stringify(parametres[key]));
+            } else {
+                url.searchParams.append(key, parametres[key]);
+            }
+        });
+        
+        const targetUrl = url.toString();
+        debugLog(`🔗 URL: ${targetUrl.substring(0, 100)}...`);
+        
+        // Intentar amb fetch i CORS proxy
+        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        debugLog(`✅ Fetch exitós: ${JSON.stringify(data).substring(0, 100)}`);
+        return data;
+        
+    } catch (fetchError) {
+        debugLog(`❌ Fetch fallat: ${fetchError.toString()}`);
+        
+        // Opció 2: Fallback a JSONP (per si algun navegador funciona)
+        return new Promise((resolve) => {
+            const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+            const script = document.createElement('script');
+            
+            window[callbackName] = function(data) {
+                debugLog(`✅ JSONP exitós: ${JSON.stringify(data).substring(0, 100)}`);
+                delete window[callbackName];
+                if (script.parentNode) {
                     document.body.removeChild(script);
-                    
-                    resolve(data);
-                };
-                
-                // Manejar errors
-                script.onerror = function() {
-                    debugLog(`❌ Error JSONP en ${accio}`);
+                }
+                resolve(data);
+            };
+            
+            script.onerror = function() {
+                debugLog(`❌ JSONP també fallat`);
+                delete window[callbackName];
+                if (script.parentNode) {
+                    document.body.removeChild(script);
+                }
+                resolve(obtenirRespostaPerDefecte(accio, parametres));
+            };
+            
+            const url = new URL(SCRIPT_URL);
+            url.searchParams.append('action', accio);
+            url.searchParams.append('callback', callbackName);
+            Object.keys(parametres).forEach(key => {
+                url.searchParams.append(key, parametres[key]);
+            });
+            
+            script.src = url.toString();
+            document.body.appendChild(script);
+            
+            setTimeout(() => {
+                if (window[callbackName]) {
+                    debugLog(`⏰ Timeout JSONP`);
                     delete window[callbackName];
                     if (script.parentNode) {
                         document.body.removeChild(script);
                     }
                     resolve(obtenirRespostaPerDefecte(accio, parametres));
-                };
-                
-                // Afegir l'script al document
-                script.src = url.toString();
-                document.body.appendChild(script);
-                
-                // Timeout de seguretat (10 segons)
-                setTimeout(() => {
-                    if (window[callbackName]) {
-                        debugLog(`⏰ Timeout en ${accio}`);
-                        delete window[callbackName];
-                        if (script.parentNode) {
-                            document.body.removeChild(script);
-                        }
-                        resolve(obtenirRespostaPerDefecte(accio, parametres));
-                    }
-                }, 10000);
-            });
-        }
-
+                }
+            }, 8000);
+        });
+    }
+}
         // Funció auxiliar per respostes per defecte en cas d'error
         function obtenirRespostaPerDefecte(accio, parametres) {
             debugLog(`🔄 Ús resposta per defecte per ${accio}`);
@@ -2425,3 +2449,4 @@
     </script>
 </body>
 </html>
+
