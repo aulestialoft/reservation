@@ -1305,12 +1305,14 @@ function mostrarCarregantCalendaris() {
             return datesOcupades;
         }
 
-        // Funció per comprovar si una data està ocupada
-        function estaOcupat(data) {
-            const dataString = data.toISOString().split('T')[0];
-            return datesOcupades.includes(dataString);
-        }
-
+        // Funció per comprovar si una data està ocupada - VERSIÓ CORREGIDA
+function estaOcupat(data) {
+    // Normalitzar la data a mitjanit per comparar només la part de la data
+    const dataNormalitzada = new Date(data.getFullYear(), data.getMonth(), data.getDate());
+    const dataString = dataNormalitzada.toISOString().split('T')[0];
+    
+    return datesOcupades.includes(dataString);
+}
         // Obtenir preu de l'immoble
         async function obtenirPreuImmoble() {
             try {
@@ -1869,6 +1871,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 </body>
 </html>
+
 
 
 
