@@ -1499,10 +1499,13 @@ async function inicialitzarCalendarisCompactes() {
             }
         }
 
-        // Seleccionar data des dels calendaris compactes - VERSIÓ MILLORADA
+// Seleccionar data des dels calendaris compactes - VERSIÓ CORREGIDA
 function seleccionarDataCompacte(dataString, tipus) {
-    // Crear la data correctament
-    const data = new Date(dataString + 'T12:00:00');
+    // Crear la data CORRECTAMENT sense problemes de fus horari
+    const [any, mes, dia] = dataString.split('-');
+    const data = new Date(any, mes - 1, dia, 12, 0, 0); // Migdia per evitar problemes de fus horari
+    
+    console.log('🖱️ Data clicada:', dataString, 'Data processada:', data.toISOString());
     
     if (tipus === 'inici-permanent') {
         // Verificar disponibilitat per data d'inici
@@ -1844,6 +1847,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 </body>
 </html>
+
 
 
 
