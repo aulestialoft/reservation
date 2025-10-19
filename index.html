@@ -1154,7 +1154,7 @@
             <h2 class="section-title">Fes la Teva Reserva</h2>
             
             <!-- BOTÓ DE PROVA DE CONNEXIÓ - VISIBLE -->
-            
+           <!-- 
             <div style="text-align: center; margin: 20px 0; padding: 15px; background: #fff3cd; border-radius: 10px; border: 2px solid #ffeaa7;">
                 <h3 style="color: #856404; margin-bottom: 10px;">🔧 Debug Mode</h3>
                 <button onclick="provarConnexio()" style="background: #ff6b6b; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin: 5px;">
@@ -1167,7 +1167,7 @@
                     🔄 Carregar Dates Manualment
                 </button>
             </div> 
-            
+            -->
             
             <div class="main-content">
                 <!-- Selecció d'Immoble -->
@@ -1222,6 +1222,7 @@
                     </div>
                     
                     <!-- Calendari Visual -->
+                    <!--
                     <div class="calendari-container">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                             <h4 style="color: #2c3e50; margin: 0;">📆 Calendari de Disponibilitat</h4>
@@ -1235,9 +1236,9 @@
                             <div class="calendari-mes" id="mes-actual">Carregant...</div>
                             <button class="btn-nav" onclick="canviarMes(1)">→</button>
                         </div>
-                        
+                        -->
                         <!-- Dies de la setmana començant per Dilluns -->
-                        <div class="dies-setmana">
+                        <!--<div class="dies-setmana">
                             <div class="dia-setmana">Dl</div>
                             <div class="dia-setmana">Dt</div>
                             <div class="dia-setmana">Dc</div>
@@ -1280,7 +1281,7 @@
                         </div>
                     </div>
                 </div>
-                
+                -->
                 <!-- Formulari de Reserva -->
                 <div class="formulari-reserva" id="formulari-reserva">
                     <h3 style="margin-bottom: 1rem; color: #2c3e50;">📋 Dades de la reserva</h3>
@@ -1789,7 +1790,7 @@ function canviarMesCompacte(direccio, tipus) {
 // Afegeix aquesta funció per forçar l'actualització de tots els calendaris
 function actualitzarTotsElsCalendaris() {
     debugLog('🔄 Actualitzant tots els calendaris...');
-    generarCalendari();
+    //generarCalendari();
     generarCalendariIniciPermanent();
     generarCalendariFiPermanent();
 }
@@ -2660,6 +2661,7 @@ document.querySelectorAll('.btn-immoble').forEach(btn => {
 <!-- NO hi ha botó d'activació - totalment desactivat -->
 </body>
 </html>
+
 
 
 
