@@ -1681,6 +1681,7 @@
         }
         
         // Fer reserva - VERSIÓ CORREGIDA
+// Fer reserva - VERSIÓ CORREGIDA
 async function ferReserva() {
     const nom = document.getElementById('nom').value;
     const email = document.getElementById('email').value;
@@ -1688,6 +1689,7 @@ async function ferReserva() {
     const missatgeDiv = document.getElementById('missatge-reserva');
     const btnReservar = document.getElementById('btn-reservar');
     
+    // Validacions bàsiques
     if (!nom || !email || !telefon) {
         mostrarMissatge(missatgeDiv, 'Si us plau, completa tots els camps del formulari', 'error');
         return;
@@ -1698,53 +1700,84 @@ async function ferReserva() {
         return;
     }
 
-    // VERIFICAR QUE LES DATES ESTAN DEFINIDES
+    // VERIFICAR QUE LES DATES ESTAN DEFINIDES I SÓN VÀLIDES
     if (!dataIniciSeleccionada || !dataFiSeleccionada) {
         mostrarMissatge(missatgeDiv, 'Error: No s\'han seleccionat dates vàlides', 'error');
         return;
     }
 
-    // CONSTRUIR L'OBJECTE CORRECTAMENT
+    // Validar que les dates són futures
+    const avui = new Date();
+    avui.setHours(0, 0, 0, 0);
+    
+    if (dataIniciSeleccionada < avui) {
+        mostrarMissatge(missatgeDiv, 'Error: La data d\'entrada no pot ser anterior a avui', 'error');
+        return;
+    }
+
+    if (dataFiSeleccionada <= dataIniciSeleccionada) {
+        mostrarMissatge(missatgeDiv, 'Error: La data de sortida ha de ser posterior a la d\'entrada', 'error');
+        return;
+    }
+
+    // CONSTRUIR LES DADES DE RESERVA CORRECTAMENT
     const dadesReserva = {
-        nom: nom,
-        email: email,
-        telefon: telefon,
+        nom: nom.trim(),
+        email: email.trim(),
+        telefon: telefon.trim(),
         immoble: immobleSeleccionat,
         data_inici: dataIniciSeleccionada.toISOString().split('T')[0],
-        data_fi: dataFiSeleccionada.toISOString().split('T')[0]
+        data_fi: dataFiSeleccionada.toISOString().split('T')[0],
+        nits: Math.ceil((dataFiSeleccionada - dataIniciSeleccionada) / (1000 * 60 * 60 * 24)),
+        preu_total: Math.ceil((dataFiSeleccionada - dataIniciSeleccionada) / (1000 * 60 * 60 * 24)) * preuPerNit
     };
     
-    console.log('📤 Dades de reserva:', dadesReserva); // Debug
+    console.log('📤 Dades de reserva enviades:', dadesReserva);
     
+    // Deshabilitar el botó durant el procés
     btnReservar.disabled = true;
     btnReservar.textContent = '🔄 Processant...';
     
     try {
+        // Mostrar missatge de càrrega
+        mostrarMissatge(missatgeDiv, '⏳ Processant la teva reserva...', 'exit');
+        
         // FER LA PÈTICIO CORRECTAMENT
         const resultat = await ferPeticioGS('ferReserva', dadesReserva);
         
-        console.log('📥 Resposta reserva:', resultat); // Debug
+        console.log('📥 Resposta del servidor:', resultat);
         
-        if (resultat.exit) {
+        // Verificar la resposta
+        if (resultat && resultat.exit) {
+            mostrarMissatge(missatgeDiv, resultat.missatge || '✅ Reserva realitzada amb èxit!', 'exit');
             mostrarModalReserva();
+            
+            // Netejar el formulari després d'uns segons
             setTimeout(() => {
                 document.getElementById('nom').value = '';
                 document.getElementById('email').value = '';
                 document.getElementById('telefon').value = '';
                 netejarSeleccions();
                 amagarFormulariReserva();
-                carregarDatesOcupades();
+                carregarDatesOcupades(); // Actualitzar dates ocupades
+                
+                // Tornar a la secció d'inici
+                setTimeout(() => {
+                    mostrarSeccio('inici');
+                }, 1000);
             }, 3000);
         } else {
-            mostrarMissatge(missatgeDiv, resultat.missatge || 'Error en la reserva', 'error');
+            const missatgeError = resultat?.missatge || 'Error desconegut en realitzar la reserva';
+            mostrarMissatge(missatgeDiv, '❌ ' + missatgeError, 'error');
         }
     } catch (error) {
-        console.error('❌ Error reserva:', error);
-        mostrarMissatge(missatgeDiv, 'Error en la reserva: ' + error.toString(), 'error');
+        console.error('❌ Error en ferReserva:', error);
+        mostrarMissatge(missatgeDiv, '❌ Error de connexió: ' + error.message, 'error');
+    } finally {
+        // Rehabilitar el botó sempre
+        btnReservar.disabled = false;
+        btnReservar.textContent = '🚀 Fer Reserva';
     }
-    
-    btnReservar.disabled = false;
-    btnReservar.textContent = '🚀 Fer Reserva';
 }
         // Funció auxiliar per formatar dates
         function formatData(data) {
@@ -1811,6 +1844,7 @@ async function ferReserva() {
     </script>
 </body>
 </html>
+
 
 
 
