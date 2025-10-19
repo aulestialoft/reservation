@@ -1866,31 +1866,33 @@ async function ferReserva() {
         }
 
         // Inicialització
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Inicialitzant sistema...');
+        // Inicialització - VERSIÓ MILLORADA
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Inicialitzant sistema...');
+    
+    // Configurar selector d'immobles
+    document.querySelectorAll('.btn-immoble').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.btn-immoble').forEach(b => b.classList.remove('seleccionat'));
+            this.classList.add('seleccionat');
+            immobleSeleccionat = this.getAttribute('data-immoble');
+            console.log('🏠 Immoble seleccionat: ' + immobleSeleccionat);
             
-            // Configurar selector d'immobles
-            document.querySelectorAll('.btn-immoble').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.btn-immoble').forEach(b => b.classList.remove('seleccionat'));
-                    this.classList.add('seleccionat');
-                    immobleSeleccionat = this.getAttribute('data-immoble');
-                    console.log('🏠 Immoble seleccionat: ' + immobleSeleccionat);
-                    
-                    netejarSeleccions();
-                    obtenirPreuImmoble();
-                    carregarDatesOcupades();
-                });
-            });
-            
-            // Carregar dades inicials
+            netejarSeleccions();
             obtenirPreuImmoble();
+            // Ara carregarDatesOcupades() es crida des de inicialitzarCalendarisCompactes()
             inicialitzarCalendarisCompactes();
-            carregarDatesOcupades();
         });
+    });
+    
+    // Carregar dades inicials
+    obtenirPreuImmoble();
+    inicialitzarCalendarisCompactes(); // Això carrega les dates ocupades automàticament
+});
     </script>
 </body>
 </html>
+
 
 
 
