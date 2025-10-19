@@ -1634,7 +1634,7 @@ async function carregarDatesOcupades() {
         debugLog('🔄 Generant TOTS els calendaris...');
         
         // ACTUALITZAR TOTS ELS CALENDARIS
-        generarCalendari();
+        //generarCalendari();
         generarCalendariIniciPermanent();
         generarCalendariFiPermanent();
         
@@ -1647,7 +1647,7 @@ async function carregarDatesOcupades() {
             '⚠️ Mode offline - Dades de prova';
         
         // ACTUALITZAR TOTS ELS CALENDARIS TAMBÉ EN MODE OFFLINE
-        generarCalendari();
+        //generarCalendari();
         generarCalendariIniciPermanent();
         generarCalendariFiPermanent();
     }
@@ -2107,7 +2107,7 @@ document.querySelectorAll('.btn-immoble').forEach(btn => {
             
             debugLog('✅ Calendari generat per ' + immobleSeleccionat + '. Dies ocupats: ' + diesOcupats);
         }
-        
+        /*
         // Canviar mes al calendari
         function canviarMes(direccio) {
             mesActual += direccio;
@@ -2169,7 +2169,7 @@ document.querySelectorAll('.btn-immoble').forEach(btn => {
             generarCalendariIniciPermanent();
             generarCalendariFiPermanent();
         }
-        
+        */
         function formatDataInput(data) {
             return data.toLocaleDateString('ca-ES', {
                 day: '2-digit',
@@ -2660,6 +2660,7 @@ document.querySelectorAll('.btn-immoble').forEach(btn => {
 <!-- NO hi ha botó d'activació - totalment desactivat -->
 </body>
 </html>
+
 
 
 
