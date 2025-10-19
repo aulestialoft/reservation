@@ -1186,35 +1186,35 @@ async function ferPeticioGS(accio, parametres = {}) {
             }
         }
 
-        // Dades de prova més realistes
-        function obtenirDadesRealsPerDefecte(accio, parametres) {
-            const avui = new Date();
-            const datesOcupades = [];
-            
-            // Generar algunes dates ocupades realistes
-            for (let i = 0; i < 8; i++) {
-                const data = new Date(avui);
-                data.setDate(avui.getDate() + Math.floor(Math.random() * 60) + 10);
-                datesOcupades.push(data.toISOString().split('T')[0]);
-            }
-            
-            const respostes = {
-                'obtenirDatesOcupades': { dates: datesOcupades },
-                'obtenirPreuImmoble': { 
-                    preu: parametres.immoble === 'Loft Barcelona' ? 120 : 85 
-                },
-                'verificarDisponibilitat': { 
-                    disponible: Math.random() > 0.3,
-                    missatge: Math.random() > 0.3 ? '✅ Disponible' : '❌ No disponible en aquestes dates'
-                },
-                'ferReserva': { 
-                    exit: true, // Simulem que la reserva és exitosa
-                    missatge: '✅ Reserva realitzada correctament (mode prova)'
-                }
-            };
-            
-            return respostes[accio] || { error: 'Acció no reconeguda' };
+       // Dades de prova més realistes
+function obtenirDadesRealsPerDefecte(accio, parametres) {
+    const avui = new Date();
+    const datesOcupades = [];
+    
+    // Generar algunes dates ocupades realistes
+    for (let i = 0; i < 8; i++) {
+        const data = new Date(avui);
+        data.setDate(avui.getDate() + Math.floor(Math.random() * 60) + 10);
+        datesOcupades.push(data.toISOString().split('T')[0]);
+    }
+    
+    const respostes = {
+        'obtenirDatesOcupades': { dates: datesOcupades },
+        'obtenirPreuImmoble': { 
+            preu: parametres.immoble === 'Loft Barcelona' ? 120 : 85 
+        },
+        'verificarDisponibilitat': { 
+            disponible: Math.random() > 0.3,
+            missatge: Math.random() > 0.3 ? '✅ Disponible' : '❌ No disponible en aquestes dates'
+        }, // COMA AFEGIDA AQUÍ
+        'ferReserva': { 
+            exit: true,
+            missatge: '✅ Reserva realitzada correctament (mode prova)'
         }
+    };
+    
+    return respostes[accio] || { error: 'Acció no reconeguda' };
+}
 
         // Funció auxiliar per respostes per defecte en cas d'error
         function obtenirRespostaPerDefecte(accio, parametres) {
@@ -1854,6 +1854,7 @@ async function ferReserva() {
     </script>
 </body>
 </html>
+
 
 
 
