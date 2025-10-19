@@ -1499,93 +1499,100 @@ async function inicialitzarCalendarisCompactes() {
             }
         }
 
-        // Seleccionar data des dels calendaris compactes - CORREGIT
-        function seleccionarDataCompacte(dataString, tipus) {
-            // Crear la data correctament (sense problema de fus horari)
-            const data = new Date(dataString + 'T12:00:00');
-            
-            if (tipus === 'inici-permanent') {
-                // Verificar disponibilitat per data d'inici
-                if (estaOcupat(data)) {
-                    mostrarMissatge(
-                        document.getElementById('missatge-disponibilitat'),
-                        '❌ Aquesta data no està disponible. Si us plau, selecciona una altra data.',
-                        'error'
-                    );
-                    return;
-                }
-                
-                dataIniciSeleccionada = data;
-                document.getElementById('data-inici').value = formatDataInput(data);
-                
-                // Si ja hi ha una data de sortida anterior, netejar-la
-                if (dataFiSeleccionada && dataFiSeleccionada <= data) {
-                    dataFiSeleccionada = null;
-                    document.getElementById('data-fi').value = '';
-                }
-                
-                // Amagar formulari si estava visible
-                amagarFormulariReserva();
-                amagarBotoContinuar();
-                
-            } else {
-                // Verificar que hi hagi data d'entrada seleccionada
-                if (!dataIniciSeleccionada) {
-                    mostrarMissatge(
-                        document.getElementById('missatge-disponibilitat'),
-                        '⚠️ Si us plau, selecciona primer la data d\'entrada',
-                        'error'
-                    );
-                    return;
-                }
-                
-                // Verificar que la data de sortida sigui posterior
-                if (data <= dataIniciSeleccionada) {
-                    mostrarMissatge(
-                        document.getElementById('missatge-disponibilitat'),
-                        '❌ La data de sortida ha de ser posterior a la data d\'entrada',
-                        'error'
-                    );
-                    return;
-                }
-                
-                // Verificar disponibilitat de tot el rang
-                const dataTemp = new Date(dataIniciSeleccionada);
-                let totDisponible = true;
-                
-                while (dataTemp < data) {
-                    if (estaOcupat(dataTemp)) {
-                        totDisponible = false;
-                        break;
-                    }
-                    dataTemp.setDate(dataTemp.getDate() + 1);
-                }
-                
-                if (!totDisponible) {
-                    mostrarMissatge(
-                        document.getElementById('missatge-disponibilitat'),
-                        '❌ Algunes dates dins d\'aquest rang no estan disponibles',
-                        'error'
-                    );
-                    return;
-                }
-                
-                dataFiSeleccionada = data;
-                document.getElementById('data-fi').value = formatDataInput(data);
-            }
-            
-            // Actualitzar ambdós calendaris
-            generarCalendariIniciPermanent();
-            generarCalendariFiPermanent();
-            
-            // Si tenim ambdues dates, verificar disponibilitat automàticament
-            if (dataIniciSeleccionada && dataFiSeleccionada) {
-                setTimeout(() => {
-                    verificarDisponibilitat();
-                }, 100);
-            }
+        // Seleccionar data des dels calendaris compactes - VERSIÓ MILLORADA
+function seleccionarDataCompacte(dataString, tipus) {
+    // Crear la data correctament
+    const data = new Date(dataString + 'T12:00:00');
+    
+    if (tipus === 'inici-permanent') {
+        // Verificar disponibilitat per data d'inici
+        if (estaOcupat(data)) {
+            mostrarMissatge(
+                document.getElementById('missatge-disponibilitat'),
+                '❌ Aquesta data no està disponible. Si us plau, selecciona una altra data.',
+                'error'
+            );
+            return;
         }
-
+        
+        dataIniciSeleccionada = data;
+        document.getElementById('data-inici').value = formatDataInput(data);
+        
+        // Si ja hi ha una data de sortida anterior, netejar-la
+        if (dataFiSeleccionada && dataFiSeleccionada <= data) {
+            dataFiSeleccionada = null;
+            document.getElementById('data-fi').value = '';
+            amagarBotoContinuar();
+        }
+        
+        // Amagar formulari si estava visible
+        amagarFormulariReserva();
+        
+    } else {
+        // Verificar que hi hagi data d'entrada seleccionada
+        if (!dataIniciSeleccionada) {
+            mostrarMissatge(
+                document.getElementById('missatge-disponibilitat'),
+                '⚠️ Si us plau, selecciona primer la data d\'entrada',
+                'error'
+            );
+            return;
+        }
+        
+        // Verificar que la data de sortida sigui posterior
+        if (data <= dataIniciSeleccionada) {
+            mostrarMissatge(
+                document.getElementById('missatge-disponibilitat'),
+                '❌ La data de sortida ha de ser posterior a la data d\'entrada',
+                'error'
+            );
+            return;
+        }
+        
+        // Verificar disponibilitat de tot el rang
+        const dataTemp = new Date(dataIniciSeleccionada);
+        let totDisponible = true;
+        let dataOcupada = null;
+        
+        while (dataTemp < data) {
+            if (estaOcupat(dataTemp)) {
+                totDisponible = false;
+                dataOcupada = new Date(dataTemp);
+                break;
+            }
+            dataTemp.setDate(dataTemp.getDate() + 1);
+        }
+        
+        if (!totDisponible) {
+            mostrarMissatge(
+                document.getElementById('missatge-disponibilitat'),
+                `❌ El rang seleccionat no està disponible (${formatDataInput(dataOcupada)} està ocupada)`,
+                'error'
+            );
+            return;
+        }
+        
+        dataFiSeleccionada = data;
+        document.getElementById('data-fi').value = formatDataInput(data);
+    }
+    
+    // Actualitzar ambdós calendaris
+    generarCalendariIniciPermanent();
+    generarCalendariFiPermanent();
+    
+    // Si tenim ambdues dates, mostrar automàticament el botó "Continuar"
+    if (dataIniciSeleccionada && dataFiSeleccionada) {
+        datesValides = true;
+        mostrarMissatge(
+            document.getElementById('missatge-disponibilitat'),
+            '✅ Rang de dates disponible!',
+            'exit'
+        );
+        mostrarBotoContinuar();
+    } else {
+        amagarBotoContinuar();
+    }
+}
         // Formatar data per input - CORREGIT
         function formatDataInput(data) {
             // Assegurar-se que la data es mostra correctament
@@ -1884,6 +1891,7 @@ async function ferReserva() {
     </script>
 </body>
 </html>
+
 
 
 
