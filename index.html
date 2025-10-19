@@ -1372,100 +1372,122 @@ async function inicialitzarCalendarisCompactes() {
             generarCalendariCompacte(calendariDiv, mes, any, 'fi-permanent');
         }
 
-        // Funció principal per generar calendaris compactes
-        function generarCalendariCompacte(calendariDiv, mes, any, tipus) {
-            const nomsMesos = ['Gen', 'Feb', 'Mar', 'Abr', 'Maig', 'Jun', 
-                              'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'];
-            
-            const avui = new Date();
-            const dataMinima = tipus === 'fi-permanent' && dataIniciSeleccionada ? 
-                new Date(dataIniciSeleccionada.getTime() + 24 * 60 * 60 * 1000) : avui;
-            
-            let html = `
-                <div class="calendari-header">
-                    <button class="btn-nav" onclick="canviarMesCompacte(-1, '${tipus}')">←</button>
-                    <div class="calendari-mes">${nomsMesos[mes]} ${any}</div>
-                    <button class="btn-nav" onclick="canviarMesCompacte(1, '${tipus}')">→</button>
-                </div>
-                <div class="dies-setmana">
-                    <div class="dia-setmana">Dl</div>
-                    <div class="dia-setmana">Dt</div>
-                    <div class="dia-setmana">Dc</div>
-                    <div class="dia-setmana">Dj</div>
-                    <div class="dia-setmana">Dv</div>
-                    <div class="dia-setmana">Ds</div>
-                    <div class="dia-setmana">Dg</div>
-                </div>
-                <div class="dies-mes">
-            `;
-            
-            // Obtenir primer i últim dia del mes
-            const primerDia = new Date(any, mes, 1);
-            const ultimDia = new Date(any, mes + 1, 0);
-            
-            // Començar per Dilluns
-            let diaIniciSetmana = primerDia.getDay();
-            if (diaIniciSetmana === 0) {
-                diaIniciSetmana = 6;
-            } else {
-                diaIniciSetmana = diaIniciSetmana - 1;
-            }
-            
-            // Afegir dies buits abans del primer dia
-            for (let i = 0; i < diaIniciSetmana; i++) {
-                html += '<div class="dia buit"></div>';
-            }
-            
-            // Afegir dies del mes
-            for (let dia = 1; dia <= ultimDia.getDate(); dia++) {
-                const dataActual = new Date(any, mes, dia);
-                let classe = 'dia';
-                let disabled = false;
-                
-                // Verificar si és avui
-                if (dataActual.toDateString() === avui.toDateString()) {
-                    classe += ' avui';
-                }
-                
-                // Verificar si és passat
-                if (dataActual < new Date(avui.getFullYear(), avui.getMonth(), avui.getDate())) {
-                    classe += ' passat';
-                    disabled = true;
-                }
-                
-                // Per data de sortida, verificar que sigui posterior a la data d'entrada
-                if (tipus === 'fi-permanent' && dataIniciSeleccionada) {
-                    if (dataActual <= dataIniciSeleccionada) {
-                        classe += ' passat';
-                        disabled = true;
-                    }
-                }
-                
-                // Verificar si està ocupat
-                if (estaOcupat(dataActual)) {
-                    classe += ' ocupat';
-                    disabled = true;
-                }
-                
-                // Verificar si està seleccionat
-                if (tipus === 'inici-permanent' && dataIniciSeleccionada && 
-                    dataActual.toDateString() === dataIniciSeleccionada.toDateString()) {
-                    classe += ' seleccionat';
-                } else if (tipus === 'fi-permanent' && dataFiSeleccionada && 
-                          dataActual.toDateString() === dataFiSeleccionada.toDateString()) {
-                    classe += ' seleccionat';
-                }
-                
-                if (disabled) {
-                    html += `<div class="${classe}">${dia}</div>`;
-                } else {
-                    html += `<div class="${classe}" onclick="seleccionarDataCompacte('${dataActual.toISOString().split('T')[0]}', '${tipus}')">${dia}</div>`;
-                }
-            }
-            
-            html += '</div>';
-            calendariDiv.innerHTML = html;
+        // Funció principal per generar calendaris compactes - VERSIÓ CORREGIDA
+function generarCalendariCompacte(calendariDiv, mes, any, tipus) {
+    const nomsMesos = ['Gen', 'Feb', 'Mar', 'Abr', 'Maig', 'Jun', 
+                      'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'];
+    
+    const avui = new Date();
+    avui.setHours(12, 0, 0, 0); // Normalitzar a migdia
+    
+    const dataMinima = tipus === 'fi-permanent' && dataIniciSeleccionada ? 
+        new Date(dataIniciSeleccionada.getTime() + 24 * 60 * 60 * 1000) : avui;
+    
+    let html = `
+        <div class="calendari-header">
+            <button class="btn-nav" onclick="canviarMesCompacte(-1, '${tipus}')">←</button>
+            <div class="calendari-mes">${nomsMesos[mes]} ${any}</div>
+            <button class="btn-nav" onclick="canviarMesCompacte(1, '${tipus}')">→</button>
+        </div>
+        <div class="dies-setmana">
+            <div class="dia-setmana">Dl</div>
+            <div class="dia-setmana">Dt</div>
+            <div class="dia-setmana">Dc</div>
+            <div class="dia-setmana">Dj</div>
+            <div class="dia-setmana">Dv</div>
+            <div class="dia-setmana">Ds</div>
+            <div class="dia-setmana">Dg</div>
+        </div>
+        <div class="dies-mes">
+    `;
+    
+    // Obtenir primer i últim dia del mes
+    const primerDia = new Date(any, mes, 1);
+    const ultimDia = new Date(any, mes + 1, 0);
+    
+    // Començar per Dilluns
+    let diaIniciSetmana = primerDia.getDay();
+    if (diaIniciSetmana === 0) {
+        diaIniciSetmana = 6;
+    } else {
+        diaIniciSetmana = diaIniciSetmana - 1;
+    }
+    
+    // Afegir dies buits abans del primer dia
+    for (let i = 0; i < diaIniciSetmana; i++) {
+        html += '<div class="dia buit"></div>';
+    }
+    
+    // Afegir dies del mes
+    for (let dia = 1; dia <= ultimDia.getDate(); dia++) {
+        const dataActual = new Date(any, mes, dia, 12, 0, 0); // Normalitzar a migdia
+        let classe = 'dia';
+        let disabled = false;
+        
+        // Verificar si és avui (comparant només data, no hora)
+        const avuiNormalitzat = new Date(avui);
+        avuiNormalitzat.setHours(12, 0, 0, 0);
+        
+        if (dataActual.toDateString() === avuiNormalitzat.toDateString()) {
+            classe += ' avui';
         }
+        
+        // Verificar si és passat (comparant només data)
+        const dataActualNomésData = new Date(dataActual.getFullYear(), dataActual.getMonth(), dataActual.getDate());
+        const avuiNomésData = new Date(avui.getFullYear(), avui.getMonth(), avui.getDate());
+        
+        if (dataActualNomésData < avuiNomésData) {
+            classe += ' passat';
+            disabled = true;
+        }
+        
+        // Per data de sortida, verificar que sigui posterior a la data d'entrada
+        if (tipus === 'fi-permanent' && dataIniciSeleccionada) {
+            const dataIniciNomésData = new Date(dataIniciSeleccionada.getFullYear(), dataIniciSeleccionada.getMonth(), dataIniciSeleccionada.getDate());
+            const dataActualNomésData = new Date(dataActual.getFullYear(), dataActual.getMonth(), dataActual.getDate());
+            
+            if (dataActualNomésData <= dataIniciNomésData) {
+                classe += ' passat';
+                disabled = true;
+            }
+        }
+        
+        // Verificar si està ocupat
+        if (estaOcupat(dataActual)) {
+            classe += ' ocupat';
+            disabled = true;
+        }
+        
+        // Verificar si està seleccionat
+        if (tipus === 'inici-permanent' && dataIniciSeleccionada) {
+            const dataIniciNomésData = new Date(dataIniciSeleccionada.getFullYear(), dataIniciSeleccionada.getMonth(), dataIniciSeleccionada.getDate());
+            const dataActualNomésData = new Date(dataActual.getFullYear(), dataActual.getMonth(), dataActual.getDate());
+            
+            if (dataActualNomésData.getTime() === dataIniciNomésData.getTime()) {
+                classe += ' seleccionat';
+            }
+        } else if (tipus === 'fi-permanent' && dataFiSeleccionada) {
+            const dataFiNomésData = new Date(dataFiSeleccionada.getFullYear(), dataFiSeleccionada.getMonth(), dataFiSeleccionada.getDate());
+            const dataActualNomésData = new Date(dataActual.getFullYear(), dataActual.getMonth(), dataActual.getDate());
+            
+            if (dataActualNomésData.getTime() === dataFiNomésData.getTime()) {
+                classe += ' seleccionat';
+            }
+        }
+        
+        // Crear el string de data en format YYYY-MM-DD per al onclick
+        const dataISO = `${any}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+        
+        if (disabled) {
+            html += `<div class="${classe}">${dia}</div>`;
+        } else {
+            html += `<div class="${classe}" onclick="seleccionarDataCompacte('${dataISO}', '${tipus}')">${dia}</div>`;
+        }
+    }
+    
+    html += '</div>';
+    calendariDiv.innerHTML = html;
+}
 
         // Canviar mes als calendaris compactes
         function canviarMesCompacte(direccio, tipus) {
@@ -1847,6 +1869,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 </body>
 </html>
+
 
 
 
