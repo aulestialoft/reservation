@@ -1041,9 +1041,9 @@
             <div class="logo">AULÈSTIA</div>
             <div class="tagline">Allotjaments Únics al Cor de Barcelona</div>
             
-            <div class="nav-tabs">
-                <a href="#immobles" class="nav-tab" onclick="mostrarSeccio('immobles')">📋 Els Nostres Immobles</a>
-                <a href="#reserves" class="nav-tab" onclick="mostrarSeccio('reserves')">📅 Fer Reserva</a>
+            <<div class="nav-tabs">
+                <a href="#immobles" class="nav-tab" onclick="mostrarSeccio('immobles', this)">📋 Els Nostres Immobles</a>
+                <a href="#reserves" class="nav-tab" onclick="mostrarSeccio('reserves', this)">📅 Fer Reserva</a>
             </div>
         </header>
 
@@ -1347,12 +1347,12 @@
             <div class="footer-content">
                 <h3>AULÈSTIA</h3>
                 <p>Allotjaments únics al cor de Barcelona</p>
-                <div class="footer-links">
-                    <a href="#inici" class="footer-link" onclick="mostrarSeccio('inici')">Inici</a>
-                    <a href="#immobles" class="footer-link" onclick="mostrarSeccio('immobles')">Immobles</a>
-                    <a href="#reserves" class="footer-link" onclick="mostrarSeccio('reserves')">Reserves</a>
+              <div class="footer-links">
+                    <a href="#inici" class="footer-link" onclick="mostrarSeccio('inici', this)">Inici</a>
+                    <a href="#immobles" class="footer-link" onclick="mostrarSeccio('immobles', this)">Immobles</a>
+                    <a href="#reserves" class="footer-link" onclick="mostrarSeccio('reserves', this)">Reserves</a>
                 </div>
-                <p>&copy; 2024 Aulèstia. Tots els drets reservats.</p>
+                    <p>&copy; 2024 Aulèstia. Tots els drets reservats.</p>
             </div>
         </footer>
     </div>
@@ -1368,8 +1368,8 @@
     </div>
 
     <script>
-        // Funcionalitat de navegació entre seccions
-        function mostrarSeccio(seccioId) {
+       // Funcionalitat de navegació entre seccions - VERSIÓ CORREGIDA
+        function mostrarSeccio(seccioId, elementClicat) {
             // Amagar totes les seccions
             document.querySelectorAll('.section').forEach(seccio => {
                 seccio.classList.remove('active');
@@ -1382,7 +1382,11 @@
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            event.target.classList.add('active');
+            
+            // Si s'ha passat l'element clicat, marcar-lo com a actiu
+            if (elementClicat) {
+                elementClicat.classList.add('active');
+            }
             
             // Si és la secció de reserves, inicialitzar el calendari
             if (seccioId === 'reserves') {
@@ -2656,6 +2660,7 @@ document.querySelectorAll('.btn-immoble').forEach(btn => {
 <!-- NO hi ha botó d'activació - totalment desactivat -->
 </body>
 </html>
+
 
 
 
