@@ -1656,62 +1656,72 @@
             inicialitzarCalendarisCompactes();
         }
         
-        // Fer reserva
-        async function ferReserva() {
-            const nom = document.getElementById('nom').value;
-            const email = document.getElementById('email').value;
-            const telefon = document.getElementById('telefon').value;
-            const missatgeDiv = document.getElementById('missatge-reserva');
-            const btnReservar = document.getElementById('btn-reservar');
-            
-            if (!nom || !email || !telefon) {
-                mostrarMissatge(missatgeDiv, 'Si us plau, completa tots els camps del formulari', 'error');
-                return;
-            }
-            
-            if (!datesValides) {
-                mostrarMissatge(missatgeDiv, 'Si us plau, verifica primer la disponibilitat de les dates', 'error');
-                return;
-            }
-            
-            const dadesReserva = {
-                nom: nom,
-                email: email,
-                telefon: telefon,
-                immoble: immobleSeleccionat,
-                data_inici: dataIniciSeleccionada.toISOString().split('T')[0],
-                data_fi: dataFiSeleccionada.toISOString().split('T')[0]
-            };
-            
-            btnReservar.disabled = true;
-            btnReservar.textContent = '🔄 Processant...';
-            
-            try {
-                const resultat = await ferPeticioGS('ferReserva', {
-                    dades: dadesReserva
-                });
-                
-                if (resultat.exit) {
-                    mostrarModalReserva();
-                    setTimeout(() => {
-                        document.getElementById('nom').value = '';
-                        document.getElementById('email').value = '';
-                        document.getElementById('telefon').value = '';
-                        netejarSeleccions();
-                        amagarFormulariReserva();
-                        carregarDatesOcupades();
-                    }, 3000);
-                } else {
-                    mostrarMissatge(missatgeDiv, resultat.missatge, 'error');
-                }
-            } catch (error) {
-                mostrarMissatge(missatgeDiv, 'Error en la reserva: ' + error.toString(), 'error');
-            }
-            
-            btnReservar.disabled = false;
-            btnReservar.textContent = '🚀 Fer Reserva';
-        }
+        // Fer reserva - VERSIÓ CORREGIDA
+async function ferReserva() {
+    const nom = document.getElementById('nom').value;
+    const email = document.getElementById('email').value;
+    const telefon = document.getElementById('telefon').value;
+    const missatgeDiv = document.getElementById('missatge-reserva');
+    const btnReservar = document.getElementById('btn-reservar');
+    
+    if (!nom || !email || !telefon) {
+        mostrarMissatge(missatgeDiv, 'Si us plau, completa tots els camps del formulari', 'error');
+        return;
+    }
+    
+    if (!datesValides) {
+        mostrarMissatge(missatgeDiv, 'Si us plau, verifica primer la disponibilitat de les dates', 'error');
+        return;
+    }
+
+    // VERIFICAR QUE LES DATES ESTAN DEFINIDES
+    if (!dataIniciSeleccionada || !dataFiSeleccionada) {
+        mostrarMissatge(missatgeDiv, 'Error: No s\'han seleccionat dates vàlides', 'error');
+        return;
+    }
+
+    // CONSTRUIR L'OBJECTE CORRECTAMENT
+    const dadesReserva = {
+        nom: nom,
+        email: email,
+        telefon: telefon,
+        immoble: immobleSeleccionat,
+        data_inici: dataIniciSeleccionada.toISOString().split('T')[0],
+        data_fi: dataFiSeleccionada.toISOString().split('T')[0]
+    };
+    
+    console.log('📤 Dades de reserva:', dadesReserva); // Debug
+    
+    btnReservar.disabled = true;
+    btnReservar.textContent = '🔄 Processant...';
+    
+    try {
+        // FER LA PÈTICIO CORRECTAMENT
+        const resultat = await ferPeticioGS('ferReserva', dadesReserva);
         
+        console.log('📥 Resposta reserva:', resultat); // Debug
+        
+        if (resultat.exit) {
+            mostrarModalReserva();
+            setTimeout(() => {
+                document.getElementById('nom').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('telefon').value = '';
+                netejarSeleccions();
+                amagarFormulariReserva();
+                carregarDatesOcupades();
+            }, 3000);
+        } else {
+            mostrarMissatge(missatgeDiv, resultat.missatge || 'Error en la reserva', 'error');
+        }
+    } catch (error) {
+        console.error('❌ Error reserva:', error);
+        mostrarMissatge(missatgeDiv, 'Error en la reserva: ' + error.toString(), 'error');
+    }
+    
+    btnReservar.disabled = false;
+    btnReservar.textContent = '🚀 Fer Reserva';
+}
         // Funció auxiliar per formatar dates
         function formatData(data) {
             return data.toLocaleDateString('ca-ES', {
@@ -1777,3 +1787,4 @@
     </script>
 </body>
 </html>
+
