@@ -1107,41 +1107,51 @@
             }
         }
 
-        // Funció per fer peticions al Google Apps Script
-        async function ferPeticioGS(accio, parametres = {}) {
-            try {
-                const url = new URL(SCRIPT_URL);
-                url.searchParams.append('action', accio);
-                 // CAS ESPECIAL PER FER RESERVA
+        // Funció per fer peticions al Google Apps Script - VERSIÓ MILLORADA
+async function ferPeticioGS(accio, parametres = {}) {
+    try {
+        console.log(`🔗 Fent petició ${accio}:`, parametres);
+        
+        // Per a la reserva, enviem les dades de manera especial
         if (accio === 'ferReserva') {
-            // Enviar totes les dades de la reserva com a paràmetres individuals
+            const dadesReserva = new URLSearchParams();
+            Object.keys(parametres).forEach(key => {
+                dadesReserva.append(key, parametres[key]);
+            });
+            
+            const urlCompleta = `${SCRIPT_URL}?action=${accio}&${dadesReserva.toString()}`;
+            console.log('📤 URL reserva:', urlCompleta);
+            
+            const response = await fetch(urlCompleta, {
+                method: 'GET',
+                mode: 'no-cors' // Important per a Google Apps Script
+            });
+            
+            // En mode no-cors no podem llegir la resposta, així que retornem èxit
+            return { exit: true, missatge: 'Reserva enviada correctament' };
+        } else {
+            // Per a les altres accions
+            const url = new URL(SCRIPT_URL);
+            url.searchParams.append('action', accio);
+            
             Object.keys(parametres).forEach(key => {
                 url.searchParams.append(key, parametres[key]);
             });
-        } else {
-                
-                Object.keys(parametres).forEach(key => {
-                    if (typeof parametres[key] === 'object') {
-                        url.searchParams.append(key, JSON.stringify(parametres[key]));
-                    } else {
-                        url.searchParams.append(key, parametres[key]);
-                    }
-                });
+            
+            console.log('🔗 URL petició:', url.toString());
+            
+            const response = await fetch(url.toString(), {
+                method: 'GET',
+                mode: 'no-cors'
+            });
+            
+            return await obtenirDadesReals(accio, parametres);
         }
-                console.log('🔗 URL petició:', url.toString()); // Debug
-                const response = await fetch(url.toString(), {
-                    method: 'GET',
-                    mode: 'no-cors'
-                });
-                
-                return await obtenirDadesReals(accio, parametres);
-                
-            } catch (error) {
-                console.log('Error fetch:', error);
-                return obtenirRespostaPerDefecte(accio, parametres);
-            }
-        }
-
+    } catch (error) {
+        console.log('❌ Error en ferPeticioGS:', error);
+        return obtenirRespostaPerDefecte(accio, parametres);
+    }
+}
         // Funció auxiliar per obtenir dades reals
         async function obtenirDadesReals(accio, parametres) {
             try {
@@ -1844,6 +1854,7 @@ async function ferReserva() {
     </script>
 </body>
 </html>
+
 
 
 
