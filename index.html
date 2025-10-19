@@ -1236,36 +1236,59 @@ function obtenirDadesRealsPerDefecte(accio, parametres) {
             return respostes[accio] || { error: 'Acció no reconeguda' };
         }
 
-        // Carregar dates ocupades
-        async function carregarDatesOcupades() {
-            try {
-                const resultat = await ferPeticioGS('obtenirDatesOcupades', {
-                    immoble: immobleSeleccionat
-                });
-                
-                let datesArray = [];
-                
-                if (Array.isArray(resultat)) {
-                    datesArray = resultat;
-                } else if (resultat && Array.isArray(resultat.dates)) {
-                    datesArray = resultat.dates;
-                } else {
-                    datesArray = [];
-                }
-                
-                datesOcupades = datesArray;
-                
-                // Actualitzar tots els calendaris
-                generarCalendariIniciPermanent();
-                generarCalendariFiPermanent();
-                
-            } catch (error) {
-                console.log('Error carregant dates:', error);
-                datesOcupades = obtenirDatesOcupadesPerDefecte();
-                generarCalendariIniciPermanent();
-                generarCalendariFiPermanent();
-            }
+       // Carregar dates ocupades - VERSIÓ MILLORADA
+async function carregarDatesOcupades() {
+    console.log('🔄 Carregant dates ocupades per:', immobleSeleccionat);
+    
+    // Mostrar indicador de càrrega als calendaris
+    mostrarCarregantCalendaris();
+    
+    try {
+        const resultat = await ferPeticioGS('obtenirDatesOcupades', {
+            immoble: immobleSeleccionat
+        });
+        
+        let datesArray = [];
+        
+        if (Array.isArray(resultat)) {
+            datesArray = resultat;
+        } else if (resultat && Array.isArray(resultat.dates)) {
+            datesArray = resultat.dates;
+        } else {
+            datesArray = [];
         }
+        
+        datesOcupades = datesArray;
+        console.log('📅 Dates ocupades carregades:', datesOcupades.length, 'dates');
+        
+        // Actualitzar tots els calendaris immediatament
+        generarCalendariIniciPermanent();
+        generarCalendariFiPermanent();
+        
+    } catch (error) {
+        console.log('❌ Error carregant dates:', error);
+        datesOcupades = obtenirDatesOcupadesPerDefecte();
+        generarCalendariIniciPermanent();
+        generarCalendariFiPermanent();
+    }
+}
+
+// Funció per mostrar estat de càrrega als calendaris
+function mostrarCarregantCalendaris() {
+    const calendaris = ['calendari-inici-permanent', 'calendari-fi-permanent'];
+    
+    calendaris.forEach(id => {
+        const calendariDiv = document.getElementById(id);
+        if (calendariDiv) {
+            calendariDiv.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: #666;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">⏳</div>
+                    <div>Carregant disponibilitat...</div>
+                </div>
+            `;
+        }
+    });
+}
 
         // Dades de prova per a mode offline
         function obtenirDatesOcupadesPerDefecte() {
@@ -1861,6 +1884,7 @@ async function ferReserva() {
     </script>
 </body>
 </html>
+
 
 
 
