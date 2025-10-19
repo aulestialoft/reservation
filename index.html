@@ -1112,6 +1112,13 @@
             try {
                 const url = new URL(SCRIPT_URL);
                 url.searchParams.append('action', accio);
+                 // CAS ESPECIAL PER FER RESERVA
+        if (accio === 'ferReserva') {
+            // Enviar totes les dades de la reserva com a paràmetres individuals
+            Object.keys(parametres).forEach(key => {
+                url.searchParams.append(key, parametres[key]);
+            });
+        } else {
                 
                 Object.keys(parametres).forEach(key => {
                     if (typeof parametres[key] === 'object') {
@@ -1120,7 +1127,8 @@
                         url.searchParams.append(key, parametres[key]);
                     }
                 });
-                
+        }
+                console.log('🔗 URL petició:', url.toString()); // Debug
                 const response = await fetch(url.toString(), {
                     method: 'GET',
                     mode: 'no-cors'
@@ -1137,6 +1145,17 @@
         // Funció auxiliar per obtenir dades reals
         async function obtenirDadesReals(accio, parametres) {
             try {
+                let urlParams = '';
+                
+                if (accio === 'ferReserva') {
+                    // Per ferReserva, enviem els paràmetres directament
+                    urlParams = Object.keys(parametres)
+                        .map(key => `${key}=${encodeURIComponent(parametres[key])}`)
+                        .join('&');
+                } else {
+                    // Per les altres accions
+                    urlParams = `immoble=${parametres.immoble || 'Loft+Barcelona'}`;
+                }
                 const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(
                     `https://script.google.com/macros/s/AKfycbxLdeqEBF-XWAWwojTUx9FaCiPC9Tn_YY42cvwSJPrEEOEB3Y--2X-tVSBVte_GS8SG/exec?action=${accio}&immoble=${parametres.immoble || 'Loft+Barcelona'}`
                 );
@@ -1145,6 +1164,7 @@
                 
                 if (response.ok) {
                     const data = await response.json();
+                     console.log('✅ Dades reals obtingudes:', data);
                     return data;
                 } else {
                     throw new Error(`Proxy error: ${response.status}`);
@@ -1787,4 +1807,5 @@ async function ferReserva() {
     </script>
 </body>
 </html>
+
 
