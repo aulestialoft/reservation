@@ -1197,6 +1197,10 @@
                     disponible: Math.random() > 0.3,
                     missatge: Math.random() > 0.3 ? '✅ Disponible' : '❌ No disponible en aquestes dates'
                 }
+                'ferReserva': { 
+                    exit: true, // Simulem que la reserva és exitosa
+                    missatge: '✅ Reserva realitzada correctament (mode prova)'
+                }
             };
             
             return respostes[accio] || { error: 'Acció no reconeguda' };
@@ -1807,5 +1811,6 @@ async function ferReserva() {
     </script>
 </body>
 </html>
+
 
 
