@@ -1312,12 +1312,19 @@ function obtenirDadesRealsPerDefecte(accio, parametres) {
             }
         }
 
-        // Inicialització dels calendaris compactes
-        function inicialitzarCalendarisCompactes() {
-            generarCalendariIniciPermanent();
-            generarCalendariFiPermanent();
-        }
-
+      // Inicialització dels calendaris compactes - VERSIÓ MILLORADA
+async function inicialitzarCalendarisCompactes() {
+    console.log('📅 Inicialitzant calendaris...');
+    
+    // Carregar dates ocupades ABANS de generar els calendaris
+    await carregarDatesOcupades();
+    
+    // Generar calendaris amb les dates ja carregades
+    generarCalendariIniciPermanent();
+    generarCalendariFiPermanent();
+    
+    console.log('✅ Calendaris inicialitzats amb dates ocupades');
+}
         // Generar calendari compacte permanent per data d'entrada
         function generarCalendariIniciPermanent() {
             const calendariDiv = document.getElementById('calendari-inici-permanent');
@@ -1854,6 +1861,7 @@ async function ferReserva() {
     </script>
 </body>
 </html>
+
 
 
 
