@@ -1602,55 +1602,7 @@ function seleccionarDataCompacte(dataString, tipus) {
             return `${dia}/${mes}/${any}`;
         }
 
-        // Verificar disponibilitat
-        async function verificarDisponibilitat() {
-            const dataInici = document.getElementById('data-inici').value;
-            const dataFi = document.getElementById('data-fi').value;
-            const missatgeDiv = document.getElementById('missatge-disponibilitat');
-            
-            if (!dataInici || !dataFi) {
-                mostrarMissatge(missatgeDiv, 'Si us plau, selecciona tant la data d\'entrada com la de sortida', 'error');
-                return;
-            }
-            
-            if (dataFi <= dataInici) {
-                mostrarMissatge(missatgeDiv, 'La data de sortida ha de ser posterior a la data d\'entrada', 'error');
-                return;
-            }
-            
-            // Convertir les dates correctament
-            const partsInici = dataInici.split('/');
-            const partsFi = dataFi.split('/');
-            dataIniciSeleccionada = new Date(partsInici[2], partsInici[1] - 1, partsInici[0]);
-            dataFiSeleccionada = new Date(partsFi[2], partsFi[1] - 1, partsFi[0]);
-            
-            mostrarMissatge(missatgeDiv, '🔍 Verificant disponibilitat...', 'exit');
-            
-            try {
-                const resultat = await ferPeticioGS('verificarDisponibilitat', {
-                    immoble: immobleSeleccionat,
-                    data_inici: dataIniciSeleccionada.toISOString().split('T')[0],
-                    data_fi: dataFiSeleccionada.toISOString().split('T')[0]
-                });
-                
-                if (resultat.disponible) {
-                    datesValides = true;
-                    mostrarMissatge(missatgeDiv, resultat.missatge, 'exit');
-                    mostrarBotoContinuar();
-                    amagarFormulariReserva();
-                } else {
-                    datesValides = false;
-                    mostrarMissatge(missatgeDiv, resultat.missatge, 'error');
-                    amagarBotoContinuar();
-                    amagarFormulariReserva();
-                }
-            } catch (error) {
-                datesValides = false;
-                mostrarMissatge(missatgeDiv, 'Error verificant disponibilitat', 'error');
-                amagarBotoContinuar();
-                amagarFormulariReserva();
-            }
-        }
+        
 
         // Mostrar botó "Continuar amb la Reserva"
         function mostrarBotoContinuar() {
@@ -1892,6 +1844,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 </body>
 </html>
+
 
 
 
