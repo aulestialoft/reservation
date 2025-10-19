@@ -1154,7 +1154,7 @@
             <h2 class="section-title">Fes la Teva Reserva</h2>
             
             <!-- BOTÓ DE PROVA DE CONNEXIÓ - VISIBLE -->
-            <!--
+            
             <div style="text-align: center; margin: 20px 0; padding: 15px; background: #fff3cd; border-radius: 10px; border: 2px solid #ffeaa7;">
                 <h3 style="color: #856404; margin-bottom: 10px;">🔧 Debug Mode</h3>
                 <button onclick="provarConnexio()" style="background: #ff6b6b; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin: 5px;">
@@ -1167,7 +1167,7 @@
                     🔄 Carregar Dates Manualment
                 </button>
             </div> 
-            -->
+            
             
             <div class="main-content">
                 <!-- Selecció d'Immoble -->
@@ -2661,7 +2661,7 @@ document.querySelectorAll('.btn-immoble').forEach(btn => {
         }
     </script>
     <!-- Debug Panel (COMPLETAMENT OCULT) -->
-<div id="debug-panel" style="display: none;">
+<div id="debug-panel" style="display: block;">
     <h3>🔧 Debug Mode</h3>
     <button class="debug-btn" onclick="provarConnexio()">🧪 Provar Connexió</button>
     <button class="debug-btn" onclick="netejarDebug()">🧹 Netejar Debug</button>
@@ -2670,11 +2670,12 @@ document.querySelectorAll('.btn-immoble').forEach(btn => {
 </div>
 
 <!-- Debug Console (COMPLETAMENT OCULTA) -->
-<div id="debug-console" style="display: none;"></div>
+<div id="debug-console" style="display: block;"></div>
 
 <!-- NO hi ha botó d'activació - totalment desactivat -->
 </body>
 </html>
+
 
 
 
